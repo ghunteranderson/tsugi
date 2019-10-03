@@ -16,29 +16,29 @@ as a primative data type or complex.
 can be written like this */
 ```
 
-# Importing modules
+# Importing Types, Functions, and Variables
+Types have a fully qualified name that consist of the <module>.<type>. That means
+refercing another type might look like this.
 ```
-// Entire modules can be imported like this
-import module Math
+var obj = new tsugi.package.CustomType(arg1, arg2, arg3);
+```
+But we like easy to read code and this is not that.
+We can use the `with` keyword to specify any aliasing.
+```
+// Types can be imported allowing them to be referenced without the module prefix
+with tsugi.util.Math
+var pi = Math.PI
 
-/* Sometimes, we may want to alias the module name. This can be especially
- * useful if the module has a long fully qualified name
- */
-import module QualityGraphs as qg
+// Static members of a type can be imported as well to ommit the type name when referencing them
+with tsugi.util.Math.pow
+with tsugi.util.Math.PI
+var pipi = pow(PI, 2)
 
-/* Only specific types from a module can be imported if desired.
- * These types can now be directly referenced in the namespace without
- * having to specify which module they come from. However, types cannot
- * be aliased
- */
-import type QualityGraphs.QGWindow
-
-/* Just like types, functions and variables can be directly imported as well.
- * Function assertTrue and constant PI can be referenced without specifing the
- * module.
- */
-import function Assertions.assertTrue // Import function from namespace
-import constant Math.PI
+// If we want to keep a module prefix but make it shorter, we can alias the module name
+with tsugi.long.stocking as pls
+// Using a type from this module might now look like this
+pls.Type t = new pls.Type(arg1, arg2)
+// Note that only modules can be aliased. Types and methods cannot be aliased
 ```
 
 # Native Data Types
@@ -57,6 +57,9 @@ natively supported by the language evenn without the standard library.
 
 Additionally, arrays of any single type are supported as well. Arrays are fixed-length
 and can only store types assignable to the declared type of the array.
+
+Strings are another datatype that recieve special treatment as they can be declared as
+literals in the source code.
 
 # Literals
 TODO
@@ -78,7 +81,7 @@ object = new CustomType()
 // Implicit static typing
 // This is only allowed when the variable is immediately assigned a value
 var graph = new BarGraph()
-var age = 3
+var age = 3 // Integer type
 
 // Since constants must be instantiated immediately, no type is required
 const PI = 3.14159
