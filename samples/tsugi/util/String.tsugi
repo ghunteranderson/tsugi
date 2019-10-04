@@ -1,7 +1,8 @@
-module tsugi.util
+module tsugi.util.String
 
 class String:
-    private static Boolean isWhiteSpace(Character c) -> c in [' ', '\t', '\n', '\r']
+    private static Boolean isWhiteSpace(Character c):
+        return c in [' ', '\t', '\n', '\r']
 
     private Character[] value
 

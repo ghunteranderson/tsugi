@@ -1,3 +1,2 @@
 module tsugi.util:
-    export tsugi.util.* to *
-    open tsugi.util.* to *
+    export App, List, Math, String

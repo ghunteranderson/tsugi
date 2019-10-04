@@ -1,0 +1,7 @@
+module tsugi.util
+
+// An interface is just an API without implementation
+interface Collection:
+    Integer size()
+    void add(Object obj)
+    Boolean contains(Object obj)

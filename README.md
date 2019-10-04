@@ -3,10 +3,23 @@ Just another programming language project. Below, are some samples and proposed
 syntax from which, one day, a spec may be written.
 
 # Concepts
-modules - similar to a namespace, a module contains types and functions. However can also
-contain global constants.   
-type - a data type either custom or built in. This could be simple and internally represented
-as a primative data type or complex.
+* **module** - a collection of classes, interfaces, lists, spaces, and scripts.
+The module can control which types are made public and which remain internal. A
+module should be a coherent group of components serving a similar purpose.   
+* **class** - a template describing the attributes and behaviors of a particular
+type of object. Multiple objects created from the same class will have the same
+API available.
+* **interface** - an API lacking the implementation. If a class can implements
+the methods of an interface, then it will be accepted as a sub-type of the
+interface.
+// TODO: I don't really want to call this an enum but list will become confusing
+with the datatype
+* **list** - A collection of constants of the same type
+* **space** - A collection of functions. The space can be imported and methods
+referenced using the space's name as a prefix
+* **script** - An entry point for execution. The script could perform a single
+small task before terminating the process or a script could bootstrap a much
+larger and longer running application.
 
 # Comments
 ``` java
@@ -18,24 +31,25 @@ can be written like this */
 
 # Importing Types, Functions, and Variables
 Types have a fully qualified name that consist of the <module>.<type>. That means
-refercing another type might look like this.
+referencing another type might look like this.
 ```
 var obj = new tsugi.package.CustomType(arg1, arg2, arg3);
 ```
-But we like easy to read code and this is not that.
-We can use the `with` keyword to specify any aliasing.
+But we like easy to read code and this is not that. We can use the `with`
+keyword to specify any imports or aliasing. In Tsugi, with statements should be
+listed at the beginning of the file directly below the module declaration
 ```
 // Types can be imported allowing them to be referenced without the module prefix
-with tsugi.util.Math
-var pi = Math.PI
+// This works for classes, interaces, and lists
+with type tsugi.util.StringBuilder
+var bob = new StringBuilder()
 
-// Static members of a type can be imported as well to ommit the type name when referencing them
-with tsugi.util.Math.pow
-with tsugi.util.Math.PI
-var pipi = pow(PI, 2)
+// Spaces can be imported to access functions and constants without the module prefix
+with space tsugi.util.Math
+var pipi = Math.pow(Math.PI, 2)
 
 // If we want to keep a module prefix but make it shorter, we can alias the module name
-with tsugi.long.stocking as pls
+with module tsugi.long.stocking as pls
 // Using a type from this module might now look like this
 pls.Type t = new pls.Type(arg1, arg2)
 // Note that only modules can be aliased. Types and methods cannot be aliased
