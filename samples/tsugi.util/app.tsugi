@@ -1,0 +1,8 @@
+
+var grapes = 4
+var apples = 3
+
+if grapes > apples:
+    println("There are more grapes than apples")
+else
+    println("There are more apples than grapes")

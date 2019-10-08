@@ -1,8 +1,6 @@
-module tsugi.util
-
-// A list is a collection of constants. They may have data associated with them
+// An enum is a collection of constants. They may have data associated with them
 // but that data should be constant
-list HttpStatus:
+enum HttpStatus:
 
     private final Integer status
     private final String message

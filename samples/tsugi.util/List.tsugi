@@ -1,5 +1,3 @@
-module tsugi.util
-
 // An interface is just an API without implementation
 interface Collection:
     Integer size()

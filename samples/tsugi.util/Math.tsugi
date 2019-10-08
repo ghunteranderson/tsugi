@@ -1,6 +1,3 @@
-module tsugi.util
-
-
 // A space is a stateless collection of functions much like a utility
 space Math:
 
