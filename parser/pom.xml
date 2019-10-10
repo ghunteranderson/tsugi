@@ -4,9 +4,12 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ghunteranderson.tsugi</groupId>
     <artifactId>parser</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.1</version>
 
+	<parent>
+		<groupId>com.ghunteranderson.tsugi</groupId>
+		<artifactId>tsugi-parent</artifactId>
+		<version>0.0.1</version>
+	</parent>
 </project>
