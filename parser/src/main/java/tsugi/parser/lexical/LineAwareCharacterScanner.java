@@ -30,8 +30,7 @@ public class LineAwareCharacterScanner {
 	}
 	
 	public char peek() {
-		char next = buffer.peek();
-		return next;
+		return buffer.peek();
 	}
 	
 	public boolean hasNext() {

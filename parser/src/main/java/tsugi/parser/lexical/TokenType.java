@@ -1,8 +1,5 @@
 package tsugi.parser.lexical;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 public enum TokenType {
 	IDENTIFIER,
 	STRING,
@@ -12,12 +9,16 @@ public enum TokenType {
 	COLON,
 	IF,
 	ELSE,
-	CMP_G,
-	CMP_L,
+	CMP_GT,
+	CMP_LT,
 	CMP_GE,
 	CMP_LE,
 	CMP_NE,
 	CMP_EQ,
 	NEW_LINE,
-	ASSIGNMENT
+	ASSIGNMENT,
+	THEN,
+	RETURN,
+	OR,
+	AND, NOT
 }

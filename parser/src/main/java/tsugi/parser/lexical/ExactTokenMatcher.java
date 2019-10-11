@@ -6,16 +6,13 @@ import lombok.RequiredArgsConstructor;
 public class ExactTokenMatcher implements TokenMatcher {
 	
 	private final TokenType type;
-	private final String token;
+	private final char[] token;
+	private int nextIndex = 0;
 	
-	@Override
-	public boolean startsWith(String s) {
-		return token.startsWith(s);
-	}
-
-	@Override
-	public boolean matches(String s) {
-		return token.equals(s);
+	public ExactTokenMatcher(TokenType type, String token) {
+		this.type = type;
+		this.token = token.toCharArray();
+		this.nextIndex = 0;
 	}
 
 	@Override
@@ -26,6 +23,27 @@ public class ExactTokenMatcher implements TokenMatcher {
 				.line(line)
 				.column(col)
 				.build();
+	}
+
+	@Override
+	public boolean offer(char c) {
+		if(nextIndex < token.length && c == token[nextIndex]) {
+			nextIndex++;
+			return true;
+		}
+		else {
+			nextIndex = token.length+1;
+			return false;
+		}
+	}
+
+	@Override
+	public void reset() {
+		nextIndex = 0;
+	}
+	
+	public boolean matched() {
+		return nextIndex == token.length;
 	}
 	
 }

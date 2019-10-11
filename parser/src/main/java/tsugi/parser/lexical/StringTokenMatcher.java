@@ -6,15 +6,67 @@ import tsugi.parser.exception.UnexpectedTokenException;
 
 public class StringTokenMatcher implements TokenMatcher {
 	
-	@Override
-	public boolean startsWith(String s) {
-		return checkString(s, true);
+	private boolean ok;
+	private boolean escaping;
+	private boolean closed;
+	private boolean opened;
+	
+	public StringTokenMatcher() {
+		reset();
 	}
-
+	
 	@Override
-	public boolean matches(String s) {
-		return checkString(s, false);
+	public boolean offer(char c) {
+		// Once syntax is broken, don't continue
+		if(!ok)
+			return false;
+		
+		// Cannot consume after closed
+		if(closed) {
+			ok = false;
+			return false;
+		}
+		
+		// First character must be a quote
+		if(ok && !opened) {
+			if(c == '"') {
+				opened = true;
+				return true;
+			} else {
+				ok = false;
+				return false;
+			}
+		}
+		
+		// Enable escaping or skip next character if escaped
+		if(c == '\\') {
+			escaping = !escaping;
+			return true;
+		}
+		// Escape character
+		else if(escaping) {
+			escaping  = !escaping;
+			return true;
+		}
+		
+		// Close character
+		if(c == '"') {
+			closed = true;
+			return true;
+		}
+		
+		// consume character
+		return true;
 	}
+	
+	@Override
+	public void reset() {
+		ok = true;
+		escaping = false;
+		closed = false;
+		opened = false;
+	}
+	
 
 	@Override
 	public Token create(String s, int line, int col) {
@@ -22,11 +74,11 @@ public class StringTokenMatcher implements TokenMatcher {
 				.type(TokenType.STRING)
 				.column(col)
 				.line(line)
-				.value(parseString(s, line, col))
+				.value(unescapeString(s, line, col))
 				.build();
 	}
 	
-	private String parseString(String s, int line, int col) {
+	private String unescapeString(String s, int line, int col) {
 		int oi=1, ni=0;
 		
 		char[] parsed = new char[s.length()-2];
@@ -60,40 +112,5 @@ public class StringTokenMatcher implements TokenMatcher {
 		
 		return new String(Arrays.copyOf(parsed, ni));
 	}
-	
-	
-	
-	private boolean checkString(String s, boolean allowPartial) {
-		
-		// Empty String is OK
-		if(s.isEmpty())
-			return allowPartial;
-		
-		// Check for opening quote
-		if(s.charAt(0) != '"')
-			return false;
-		
-		// Skim for closing quote
-		boolean complete = false;
-		int i;
-		for(i=1; !complete && i < s.length(); i++) {
-			char c = s.charAt(i);
-			if(c == '"') {
-				complete = true;
-			}
-			// Ignore whatever follows an escape character
-			else if(c ==  '\\' && i+1 < s.length()) {
-				i++;
-				c = s.charAt(i);
-			}
-		}
-		
-		if(!complete)
-			return allowPartial;
-		else
-			return i == s.length();
-	}
-	
-	
 
 }

@@ -1,21 +1,14 @@
 package tsugi.parser.lexical;
 
-import java.util.regex.Pattern;
-
 public class IdentifierMatcher implements TokenMatcher {
 	
-	private Pattern pattern = Pattern.compile("^[a-zA-Z_]{1}[a-zA-Z0-9_]*$");
+	private int nextIndex;
+	private boolean ok;
 	
-	@Override
-	public boolean startsWith(String s) {
-		return pattern.matcher(s).find();
+	public IdentifierMatcher() {
+		reset();
 	}
-
-	@Override
-	public boolean matches(String s) {
-		return pattern.matcher(s).find();
-	}
-
+	
 	@Override
 	public Token create(String s, int line, int col) {
 		return Token.builder()
@@ -24,6 +17,32 @@ public class IdentifierMatcher implements TokenMatcher {
 				.column(col)
 				.value(s)
 				.build();
+	}
+
+	@Override
+	public boolean offer(char c) {
+		if(ok && isValidChar(c, nextIndex)) {
+			nextIndex++;
+			return true;
+		}
+		else {
+			ok = false;
+			return false;
+		}
+	}
+
+	@Override
+	public void reset() {
+		nextIndex = 0;
+		ok = true;
+	}
+	
+	private boolean isValidChar(char c, int i) {
+		return 
+			(c >= 'a' && c <='z')
+			|| (c >= 'A' && c <='Z')
+			|| (c == '_')
+			|| (i > 0 && c>='0' && c <='9');
 	}
 
 }

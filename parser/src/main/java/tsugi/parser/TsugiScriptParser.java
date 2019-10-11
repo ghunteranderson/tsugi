@@ -8,6 +8,5 @@ public class TsugiScriptParser {
 
 	
 	public TsugiScript parse(InputStream in, ParseContext context) {
-		Scanner
 	}
 }

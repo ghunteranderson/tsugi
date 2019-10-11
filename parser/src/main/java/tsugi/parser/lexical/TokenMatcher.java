@@ -1,7 +1,7 @@
 package tsugi.parser.lexical;
 
 public interface TokenMatcher {
-	boolean startsWith(String s);
-	boolean matches(String s);
+	boolean offer(char c);
+	void reset();
 	Token create(String s, int line, int col);
 }

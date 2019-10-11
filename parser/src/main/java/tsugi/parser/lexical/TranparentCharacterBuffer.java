@@ -44,8 +44,10 @@ public class TranparentCharacterBuffer {
 	}
 	
 	public char peekAhead(int skip) {
-		load(skip+1);
-		return buffer.get(skip);
+		if(load(skip+1))
+			return buffer.get(skip);
+		else
+			throw new UnexpectedEndOfFileException();
 	}
 	
 	public char next() {
@@ -63,10 +65,8 @@ public class TranparentCharacterBuffer {
 				int read = reader.read(tmpBuffer);
 				for(int i=0; i<read; i++)
 					buffer.add(tmpBuffer[i]);
-				return read == remaining;							
 			}
-			else
-				return true;
+			return buffer.size() >= requestedBufferSize;							
 		} catch (IOException ex) {
 			throw new UnexpectedEndOfFileException();
 		}

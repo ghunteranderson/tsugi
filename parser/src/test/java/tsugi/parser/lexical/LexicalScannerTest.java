@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
 import tsugi.parser.exception.UnexpectedEndOfFileException;
+import static tsugi.parser.lexical.TokenType.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -85,5 +86,22 @@ public class LexicalScannerTest {
 		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
 		assertEquals(TokenType.STRING, scanner.next().getType());
 		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
+	}
+	
+	@Test
+	public void test_ifStatementWithThen() {
+		var in = new ByteArrayInputStream("if a == b || b<c then return variable".getBytes(StandardCharsets.UTF_8));
+		var scanner = new LexicalScanner(in);
+		
+		checkTypes(scanner, new TokenType[] {
+				IF, IDENTIFIER, CMP_EQ, IDENTIFIER, OR, IDENTIFIER, CMP_LT, IDENTIFIER, THEN, RETURN, IDENTIFIER
+		});
+	
+	}
+	
+	private void checkTypes(LexicalScanner scanner, TokenType[] types) {
+		for(TokenType type : types)
+			assertEquals(type, scanner.next().getType());
+		assertThrows(UnexpectedEndOfFileException.class, () -> scanner.next());
 	}
 }
