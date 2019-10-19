@@ -1,6 +1,7 @@
 package tsugi.parser.lexical;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,10 +43,15 @@ public class StringTokenMatcherTest {
 		int out = -1;
 		
 		for(int i=0; i<s.length(); i++) {
-			if(checker.offer(s.charAt(i))) {
+			if(checker.willAccept(s.charAt(i))) {
+				checker.add(s.charAt(i));
 				out = i;
 			}
+			else 
+				break;
 		}
+		
+		assertThrows(IllegalArgumentException.class, () -> checker.add(' '));
 		
 		return out;
 	}

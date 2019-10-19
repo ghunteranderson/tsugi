@@ -1,0 +1,13 @@
+[
+	{"type": "IF"},
+	{"type": "IDENTIFIER", "value": "a"},
+	{"type": "CMP_EQ"},
+	{"type": "IDENTIFIER", "value": "b"},
+	{"type": "OR"},
+	{"type": "IDENTIFIER", "value": "b"},
+	{"type": "CMP_LT"},
+	{"type": "IDENTIFIER", "value": "c"},
+	{"type": "THEN"},
+	{"type": "RETURN"},
+	{"type": "IDENTIFIER", "value": "variable"}
+]

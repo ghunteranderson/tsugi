@@ -20,5 +20,8 @@ public enum TokenType {
 	THEN,
 	RETURN,
 	OR,
-	AND, NOT
+	AND, 
+	NOT, 
+	COMMA,
+	VAR, FOR, IN, LEFT_BRACKET, RIGHT_BRACKET, ADD
 }

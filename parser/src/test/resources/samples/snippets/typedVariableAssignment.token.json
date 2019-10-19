@@ -1,0 +1,11 @@
+[
+	{"type": "IDENTIFIER", "value": "Integer"},
+	{"type": "IDENTIFIER", "value": "abc"},
+	{"type": "ASSIGNMENT"},
+	{"type": "IDENTIFIER", "value": "lookup"},
+	{"type": "LEFT_PAREN"},
+	{"type": "STRING", "value": "Hello World!"},
+	{"type": "COMMA"},
+	{"type": "IDENTIFIER", "value": "jkl"},
+	{"type": "RIGHT_PAREN"}
+]

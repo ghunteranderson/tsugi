@@ -22,7 +22,7 @@ public class LineAwareCharacterScanner {
 		
 		if(c == '\n') {
 			line++;
-			column=0;
+			column=1;
 		}
 		else
 			column++;

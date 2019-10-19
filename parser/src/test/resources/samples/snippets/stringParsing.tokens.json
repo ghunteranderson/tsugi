@@ -1,0 +1,5 @@
+[
+	{"type": "LEFT_PAREN"},
+	{"type": "STRING", "value": "hello world! \n \" \t "},
+	{"type": "RIGHT_PAREN"}
+]

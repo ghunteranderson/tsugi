@@ -1,107 +1,62 @@
 package tsugi.parser.lexical;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.Test;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tsugi.parser.exception.UnexpectedEndOfFileException;
-import static tsugi.parser.lexical.TokenType.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import tsugi.test.fblt.FileBasedTsugiTestFactory;
+import tsugi.test.fblt.TestFiles;
+import tsugi.test.fblt.TokenDescription;
 
 public class LexicalScannerTest {
-
-	@Test
-	public void test_parenthesisOnly() {
-		var in = new ByteArrayInputStream(" (  ()( )   )()   ".getBytes(StandardCharsets.UTF_8));
-		var scanner = new LexicalScanner(in);
+	
+	@TestFactory
+	public Stream<DynamicTest> dynamic(){
+		return Arrays.asList(/*"samples/snippets",*/ "samples/programs")
+			.stream()
+			.flatMap(folder -> new FileBasedTsugiTestFactory().fromFolder(folder, "tokens.json", LexicalScannerTest::runTest).stream());
 		
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-		
-		assertThrows(UnexpectedEndOfFileException.class, scanner::next);
-
 	}
 	
-	@Test
-	public void test_parensAndNewLines() {
-		var in = new ByteArrayInputStream(" (  (\n)( ) \n  )\r\n()   \n".getBytes(StandardCharsets.UTF_8));
-		var scanner = new LexicalScanner(in);
+	
+	private static void runTest(TestFiles testFiles) {
+		try {
+			// Create Scanner
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			InputStream sourceFileStream = loader.getResourceAsStream(testFiles.getSourceFile());
+			assertNotNull(sourceFileStream, "Could not open file " + testFiles.getSourceFile());
+			var scanner = new LexicalScanner(sourceFileStream);
+			
+			// Load verify data
+			InputStream verifyStream = loader.getResourceAsStream(testFiles.getVerifyFile());
+			assertNotNull(sourceFileStream, "Could not open file " + testFiles.getVerifyFile());
+			List<TokenDescription> tokens = new ObjectMapper().readerFor(new TypeReference<List<TokenDescription>>() {}).readValue(verifyStream);
+			
+			for(TokenDescription expectedToken : tokens) {
+				Token t = scanner.next();
+				assertEquals(expectedToken.getType(), t.getType().toString(), String.format("Expected %s at line %s col %s", expectedToken.getType(), t.getLine(), t.getColumn()));
+				if(expectedToken.getValue() != null) {
+					assertEquals(expectedToken.getValue(), t.getValue());
+				}
+			}
+			assertThrows(UnexpectedEndOfFileException.class, () -> scanner.next());
+		} catch(IOException ex) {
+			fail(ex);
+		}
 		
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.NEW_LINE, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.NEW_LINE, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.NEW_LINE, scanner.next().getType());
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.NEW_LINE, scanner.next().getType());
-		assertThrows(UnexpectedEndOfFileException.class, scanner::next);
-
-	}
-	
-	@Test
-	public void test_stringParsing() {
-		var in = new ByteArrayInputStream("( \"hello world! \\n \\\" \\t \" )".getBytes(StandardCharsets.UTF_8));
-		var scanner = new LexicalScanner(in);
-		
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		var stringToken = scanner.next();
-		assertEquals(TokenType.STRING, stringToken.getType());
-		assertEquals("hello world! \n \" \t ", stringToken.getValue());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-	}
-	
-	@Test
-	public void test_printHelloWorld() {
-		var in = new ByteArrayInputStream("printLn(\"Hello World!\")".getBytes(StandardCharsets.UTF_8));
-		var scanner = new LexicalScanner(in);
-		
-		assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.STRING, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-	}
-	
-	@Test
-	public void test_assignmentWithVar() {
-		var in = new ByteArrayInputStream("Integer abc = lookup(\"Hello World!\")".getBytes(StandardCharsets.UTF_8));
-		var scanner = new LexicalScanner(in);
-		
-		assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
-		assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
-		assertEquals(TokenType.ASSIGNMENT, scanner.next().getType());
-		assertEquals(TokenType.IDENTIFIER, scanner.next().getType());
-		assertEquals(TokenType.LEFT_PAREN, scanner.next().getType());
-		assertEquals(TokenType.STRING, scanner.next().getType());
-		assertEquals(TokenType.RIGHT_PAREN, scanner.next().getType());
-	}
-	
-	@Test
-	public void test_ifStatementWithThen() {
-		var in = new ByteArrayInputStream("if a == b || b<c then return variable".getBytes(StandardCharsets.UTF_8));
-		var scanner = new LexicalScanner(in);
-		
-		checkTypes(scanner, new TokenType[] {
-				IF, IDENTIFIER, CMP_EQ, IDENTIFIER, OR, IDENTIFIER, CMP_LT, IDENTIFIER, THEN, RETURN, IDENTIFIER
-		});
-	
-	}
-	
-	private void checkTypes(LexicalScanner scanner, TokenType[] types) {
-		for(TokenType type : types)
-			assertEquals(type, scanner.next().getType());
-		assertThrows(UnexpectedEndOfFileException.class, () -> scanner.next());
 	}
 }

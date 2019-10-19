@@ -12,8 +12,6 @@ import static tsugi.parser.lexical.TokenType.RIGHT_PAREN;
 import static tsugi.parser.lexical.TokenType.THEN;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import tsugi.parser.exception.UnexpectedEndOfFileException;
 import tsugi.parser.exception.UnexpectedTokenException;
@@ -32,21 +30,30 @@ public class LexicalScanner {
 		matchers = new TokenMatcher[] {
 				new ExactTokenMatcher(LEFT_PAREN, "("),
 				new ExactTokenMatcher(RIGHT_PAREN, ")"),
+				new ExactTokenMatcher(TokenType.LEFT_BRACKET, "["),
+				new ExactTokenMatcher(TokenType.RIGHT_BRACKET, "]"),
 				new ExactTokenMatcher(NEW_LINE, "\n"),
 				new ExactTokenMatcher(NEW_LINE, "\r\n"),
-				new ExactTokenMatcher(OR, "||"),
-				new ExactTokenMatcher(AND, "&&"),
 				new ExactTokenMatcher(RETURN, "return"),
 				new ExactTokenMatcher(THEN, "then"),
 				new ExactTokenMatcher(IF,  "if"),
+				new ExactTokenMatcher(TokenType.VAR, "var"),
+				new ExactTokenMatcher(TokenType.FOR, "for"),
+				new ExactTokenMatcher(TokenType.IN, "in"),
+				new ExactTokenMatcher(TokenType.ADD, "+"),
 				new ExactTokenMatcher(ASSIGNMENT, "="),
 				new ExactTokenMatcher(CMP_EQ,  "=="),
+				new ExactTokenMatcher(OR, "||"),
+				new ExactTokenMatcher(AND, "&&"),
 				new ExactTokenMatcher(TokenType.CMP_LT, "<"),
 				new ExactTokenMatcher(TokenType.CMP_LE, "<="),
 				new ExactTokenMatcher(TokenType.CMP_GT, ">"),
 				new ExactTokenMatcher(TokenType.CMP_GE, ">="),
 				new ExactTokenMatcher(TokenType.NOT, "!"),
 				new ExactTokenMatcher(TokenType.CMP_NE, "!="),
+				new ExactTokenMatcher(TokenType.COMMA, ","),
+				new ExactTokenMatcher(TokenType.COLON, ":"),
+				new NumberMatcher(),
 				new StringTokenMatcher(),
 				new IdentifierMatcher()
 		};
@@ -91,19 +98,14 @@ public class LexicalScanner {
 	
 	private TokenMatcher getWinners(){
 		int bestScore = -1;
+		TokenMatcher matcher = null;
 		for(int i=0; i<matchers.length; i++) {
-			if(lastSuccessIndex[i] > bestScore) {
+			if(lastSuccessIndex[i] > bestScore && matchers[i].isComplete()) {
 				bestScore = lastSuccessIndex[i];
+				matcher = matchers[i];
 			}
 		}
-		
-		if(bestScore > -1) {
-			for(int i=0; i<matchers.length; i++) {
-				if(lastSuccessIndex[i] == bestScore)
-					return matchers[i];
-			}
-		}
-		return null;
+		return matcher;
 	}
 	
 	
@@ -133,9 +135,10 @@ public class LexicalScanner {
 	private void updateMatchers(char c) {
 		for(int i=0; i<matchers.length; i++) {
 			if(continueFlag[i]) {
-				boolean accept = matchers[i].offer(c);
-				if(accept)
+				if(matchers[i].willAccept(c)) {
+					matchers[i].add(c);
 					lastSuccessIndex[i]++;
+				}
 				else
 					continueFlag[i] = false;
 			}

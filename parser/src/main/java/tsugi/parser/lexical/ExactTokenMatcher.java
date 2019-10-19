@@ -26,23 +26,24 @@ public class ExactTokenMatcher implements TokenMatcher {
 	}
 
 	@Override
-	public boolean offer(char c) {
-		if(nextIndex < token.length && c == token[nextIndex]) {
-			nextIndex++;
-			return true;
-		}
-		else {
-			nextIndex = token.length+1;
-			return false;
-		}
-	}
-
-	@Override
 	public void reset() {
 		nextIndex = 0;
 	}
 	
-	public boolean matched() {
+	@Override
+	public boolean willAccept(char c) {
+		return nextIndex < token.length && c == token[nextIndex];
+	}
+
+	@Override
+	public void add(char c) {
+		if(!willAccept(c))
+			throw new IllegalArgumentException("Matcher cannot accept character " + c);
+		nextIndex++;
+	}
+
+	@Override
+	public boolean isComplete() {
 		return nextIndex == token.length;
 	}
 	

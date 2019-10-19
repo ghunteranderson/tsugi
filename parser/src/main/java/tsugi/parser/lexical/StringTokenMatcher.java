@@ -6,7 +6,6 @@ import tsugi.parser.exception.UnexpectedTokenException;
 
 public class StringTokenMatcher implements TokenMatcher {
 	
-	private boolean ok;
 	private boolean escaping;
 	private boolean closed;
 	private boolean opened;
@@ -16,52 +15,7 @@ public class StringTokenMatcher implements TokenMatcher {
 	}
 	
 	@Override
-	public boolean offer(char c) {
-		// Once syntax is broken, don't continue
-		if(!ok)
-			return false;
-		
-		// Cannot consume after closed
-		if(closed) {
-			ok = false;
-			return false;
-		}
-		
-		// First character must be a quote
-		if(ok && !opened) {
-			if(c == '"') {
-				opened = true;
-				return true;
-			} else {
-				ok = false;
-				return false;
-			}
-		}
-		
-		// Enable escaping or skip next character if escaped
-		if(c == '\\') {
-			escaping = !escaping;
-			return true;
-		}
-		// Escape character
-		else if(escaping) {
-			escaping  = !escaping;
-			return true;
-		}
-		
-		// Close character
-		if(c == '"') {
-			closed = true;
-			return true;
-		}
-		
-		// consume character
-		return true;
-	}
-	
-	@Override
 	public void reset() {
-		ok = true;
 		escaping = false;
 		closed = false;
 		opened = false;
@@ -111,6 +65,43 @@ public class StringTokenMatcher implements TokenMatcher {
 		
 		
 		return new String(Arrays.copyOf(parsed, ni));
+	}
+
+	@Override
+	public boolean willAccept(char c) {
+		if(!opened)
+			return c == '"';
+		else if(closed)
+			return false;
+		else if(escaping)
+			return c == '"' 
+				||  c == '\\' 
+				|| c == 'b' 
+				|| c == 'r' 
+				|| c == 'n' 
+				|| c == 't';
+		else
+			return c >= ' ' && c <= '~';			
+	}
+
+	@Override
+	public void add(char c) {
+		if(!willAccept(c))
+			throw new IllegalArgumentException("Matcher cannot accept character " + c);
+		
+		if(!opened)
+			opened=true;
+		else if(escaping)
+			escaping = false;
+		else if(!escaping && c == '\\')
+			escaping = true;
+		else if(c == '"')
+			closed = true;
+	}
+
+	@Override
+	public boolean isComplete() {
+		return closed;
 	}
 
 }
