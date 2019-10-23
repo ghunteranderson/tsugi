@@ -7,19 +7,22 @@
 	{"type": "RIGHT_PAREN"},
 	{"type": "COLON"},
 	{"type": "NEW_LINE"},
-
+	
+	{"type": "INDENT"},
 	{"type": "VAR"},
 	{"type": "IDENTIFIER", "value":"a"},
 	{"type": "ASSIGNMENT"},
 	{"type": "INTEGER", "value": "0"},
 	{"type": "NEW_LINE"},
 	
+	{"type": "INDENT"},
 	{"type": "VAR"},
 	{"type": "IDENTIFIER", "value":"b"},
 	{"type": "ASSIGNMENT"},
 	{"type": "INTEGER", "value": "1"},
 	{"type": "NEW_LINE"},
 	
+	{"type": "INDENT"},
 	{"type": "FOR"},
 	{"type": "VAR"},
 	{"type": "IDENTIFIER", "value": "i"},
@@ -32,6 +35,8 @@
 	{"type": "COLON"},
 	{"type": "NEW_LINE"},
 	
+	{"type": "INDENT"},
+	{"type": "INDENT"},
 	{"type": "VAR"},
 	{"type": "IDENTIFIER", "value":"c"},
 	{"type": "ASSIGNMENT"},
@@ -41,16 +46,21 @@
 	{"type": "NEW_LINE"},
 	
 
+	{"type": "INDENT"},
+	{"type": "INDENT"},
 	{"type": "IDENTIFIER", "value":"a"},
 	{"type": "ASSIGNMENT"},
 	{"type": "IDENTIFIER", "value":"b"},
 	{"type": "NEW_LINE"},
 	
+	{"type": "INDENT"},
+	{"type": "INDENT"},
 	{"type": "IDENTIFIER", "value":"b"},
 	{"type": "ASSIGNMENT"},
 	{"type": "IDENTIFIER", "value":"c"},
 	{"type": "NEW_LINE"},
 	
+	{"type": "INDENT"},
 	{"type": "RETURN"},
 	{"type": "IDENTIFIER", "value":"b"},
 	{"type": "NEW_LINE"}

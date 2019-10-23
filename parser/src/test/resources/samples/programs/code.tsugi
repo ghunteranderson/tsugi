@@ -1,9 +1,0 @@
-Integer fibonachi(Integer index):
-	var a = 0
-	var b = 1
-	for var i in [1, index]:
-		var c = a+b
-		a = b
-		b = c
-	return b
-    

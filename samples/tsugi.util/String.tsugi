@@ -1,25 +1,26 @@
 class String:
-    private static Boolean isWhiteSpace(Character c):
-        return c in [' ', '\t', '\n', '\r']
 
     private Character[] value
 
-    private init(Character[] characters):
+    init(Character[] characters):
         value = characters
 
-    public String trim():
+    method String trim():
         var first = 0
         var last = value.length-1
 
-        while first < last && isWhiteSpace(value[first])) then first++
-        while last > first && isWhiteSpace(value[last]) then last--
+        while first < last && StirngUtils.isWhiteSpace(value[first])) then first++
+        while last > first && StirngUtils.isWhiteSpace(value[last]) then last--
 
         return subString(first, last)
 
-    public String subString(Integer first, Integer last):
-        if first < 0 then throw new BadArgumentException("First index cannot be negative")
-        if last > string.length then throw new BadArgumentException("Last index cannot be larger than the string")
-        if last < first then throw BadArgumentException("Last index cannot be less than the first")
+    method String subString(Integer first, Integer last):
+        if first < 0:
+            throw new BadArgumentException("First index cannot be negative")
+        if last > string.length:
+            throw new BadArgumentException("Last index cannot be larger than the string")
+        if last < first:
+            throw BadArgumentException("Last index cannot be less than the first")
 
         var array = new Character[last-first+1]
         var a = 0

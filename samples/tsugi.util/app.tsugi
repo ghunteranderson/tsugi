@@ -1,8 +1,17 @@
+import java.lang.Math
 
-var grapes = 4
-var apples = 3
+// Files can declare top level functions
+// Anything in this module can reference this as getAppleCount
+// Top level functions are restricted to module private
+func getAppleCount(Integer max):
+    return Math.floor(Math.random()*max)
 
-if grapes > apples:
-    println("There are more grapes than apples")
-else
-    println("There are more apples than grapes")
+// This top level function doubles as an entry point for executing the module
+// While it is module private, it can be used as a main point of entry
+func main():
+    Integer apples = getAppleCount(20)
+
+    for x in range(0, 5):
+        printLn("You have " + x + " apples.")
+        if x < apples:
+            printLn("We will pick one more.")

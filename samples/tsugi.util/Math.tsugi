@@ -1,19 +1,19 @@
 // A space is a stateless collection of functions much like a utility
 space Math:
 
-    Long pow(Integer a, Integer b):
-        Integer power = a
-        for i in range [2...b] power*=a
+    func Long pow(Integer a, Integer b):
+        Long power = a
+        for i in range(2, b) power*=a
         return a
 
-    Long abs(Long a):
+    func Long abs(Long a):
         if a < 0 then return a*-1
         else then return a
 
-    Double max(Double a, Double b):
+    func Double max(Double a, Double b):
         if a>b then return a
         else then return b
 
-    Float min(Float a, Float b):
+    func Float min(Float a, Float b):
         if a>b then return b
         else then return a

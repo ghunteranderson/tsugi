@@ -22,13 +22,13 @@ import tsugi.test.fblt.FileBasedTsugiTestFactory;
 import tsugi.test.fblt.TestFiles;
 import tsugi.test.fblt.TokenDescription;
 
-public class LexicalScannerTest {
+public class LexicalScannerImplTest {
 	
 	@TestFactory
 	public Stream<DynamicTest> dynamic(){
-		return Arrays.asList(/*"samples/snippets",*/ "samples/programs")
+		return Arrays.asList("samples/snippets", "samples/programs")
 			.stream()
-			.flatMap(folder -> new FileBasedTsugiTestFactory().fromFolder(folder, "tokens.json", LexicalScannerTest::runTest).stream());
+			.flatMap(folder -> new FileBasedTsugiTestFactory().fromFolder(folder, "tokens.json", LexicalScannerImplTest::runTest).stream());
 		
 	}
 	
@@ -39,7 +39,7 @@ public class LexicalScannerTest {
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
 			InputStream sourceFileStream = loader.getResourceAsStream(testFiles.getSourceFile());
 			assertNotNull(sourceFileStream, "Could not open file " + testFiles.getSourceFile());
-			var scanner = new LexicalScanner(sourceFileStream);
+			LexicalScanner scanner = new LexicalScannerImpl(sourceFileStream);
 			
 			// Load verify data
 			InputStream verifyStream = loader.getResourceAsStream(testFiles.getVerifyFile());

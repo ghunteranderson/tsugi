@@ -4,8 +4,9 @@ syntax from which, one day, a spec may be written.
 
 # Concepts
 * **module** - a collection of classes, interfaces, lists, spaces, and scripts.
-The module can control which types are made public and which remain internal. A
-module should be a coherent group of components serving a similar purpose.   
+A module should be a coherent group of components serving a similar purpose. All
+files of the same module are stored in a single folder. The modules name is
+derived from the folders name.
 * **class** - a template describing the attributes and behaviors of a particular
 type of object. Multiple objects created from the same class will have the same
 API available.
@@ -16,9 +17,6 @@ interface.
 other data tied to them.
 * **space** - A collection of functions. The space can be imported and methods
 referenced using the space's name as a prefix
-* **script** - An entry point for execution. The script could perform a single
-small task before terminating the process or a script could bootstrap a much
-larger and longer running application.
 
 # Comments
 ``` java
@@ -32,14 +30,14 @@ can be written like this */
 Types have a fully qualified name that consist of the <module>.<type>. That means
 referencing another type might look like this.
 ```
-var obj = new tsugi.package.CustomType(arg1, arg2, arg3);
+var obj = new tsugi.package.CustomType(arg1, arg2, arg3)
 ```
 But we like easy to read code and this is not that. We can use the `import`
 keyword to specify any imports or aliasing. In Tsugi, with statements should be
 listed at the beginning of the file directly below the module declaration
 ```
 // Types can be imported allowing them to be referenced without the module prefix
-// This works for classes, interaces, and lists
+// This works for classes, interfaces, and enums
 import tsugi.util.StringBuilder
 var bob = new StringBuilder()
 
@@ -55,24 +53,7 @@ pls.Type t = new pls.Type(arg1, arg2)
 ```
 
 # Native Data Types
-Some data types get special treatment by the compiler. They are the data types
-natively supported by the language evenn without the standard library.
-|  type  | description |
-+--------+-------------+
-| Long | An 8 byte signed whole number |
-| Integer | A 4 byte signed whole number |
-| Short | A 2 byte signed whole number |
-| Byte | A 1 byte signed whole number |
-| Char | A single character from the UTF-8 charset. It may take up to 4 bytes to store |
-| Double | A double precision floating point number |
-| Float | A single percision floating point number |
-| Object | The parent type from which all other types extend |
-
-Additionally, arrays of any single type are supported as well. Arrays are fixed-length
-and can only store types assignable to the declared type of the array.
-
-Strings are another datatype that recieve special treatment as they can be declared as
-literals in the source code.
+TODO
 
 # Literals
 TODO
@@ -93,8 +74,8 @@ object = new CustomType()
 
 // Implicit static typing
 // This is allowed when the variable is immediately assigned a value
-let graph = new BarGraph()
-let age = 3 // Integer type
+var graph = new BarGraph()
+var age = 3 // Integer type
 
 // Since constants must be instantiated immediately, no type is required
 const PI = 3.14159
@@ -103,10 +84,10 @@ const PI = 3.14159
 # Conditionals
 ```
 // Standard if/else block
-if 30 in range:
-    write("30 is in the range")
-else if 20 in range:
-    write("20 is in the range")
+if 30 in myList:
+    write("30 is in the list")
+else if 20 in mySet:
+    write("20 is in the set")
 else
     write("This is the else block")
 
@@ -128,18 +109,18 @@ return if arg >= 0 then arg else arg*-1
 
 # Ranges
 ```
-let range = [1...3]         // Iterable<Integer>
+let myRance = range(1, 3)         // Iterable<Integer>
 ```
 
 # Iteration
 ```
 // For var in iterable
-for x in [1...40]:
+for x in range(1, 40):
     let b = x * Math.random()
     graph.put(x, b)
 
 // Traditional for loop
-for let x=0, x<12, x++:
+for x=0, x<12, x++:
     write(Math.square(x))
 
 // Standard while loop
