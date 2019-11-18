@@ -1,11 +1,13 @@
-import lombok.Getter
-import lombok.Setter
-import lombok.ToString
-import javax.validation.Min
+import {
+    lombok.Getter,
+    lombok.Setter,
+    lombok.ToString,
+    javax.validation.Min
+}
 
 @ToString(onlyExplicitlyIncluded=True)
 @Getter
-class DatabaseEntity:
+class DatabaseEntity{
     @Setter
     private String field1
     @ToString.Include
@@ -18,5 +20,7 @@ class DatabaseEntity:
     }
 
     @Deprecated
-    method DatabaseEntity copy():
+    method DatabaseEntity copy(){
         return new DatabaseEntity()
+    }
+}

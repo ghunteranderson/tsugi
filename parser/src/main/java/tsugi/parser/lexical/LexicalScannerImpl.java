@@ -5,7 +5,6 @@ import static tsugi.parser.lexical.TokenType.ASSIGNMENT;
 import static tsugi.parser.lexical.TokenType.CMP_EQ;
 import static tsugi.parser.lexical.TokenType.IF;
 import static tsugi.parser.lexical.TokenType.LEFT_PAREN;
-import static tsugi.parser.lexical.TokenType.NEW_LINE;
 import static tsugi.parser.lexical.TokenType.OR;
 import static tsugi.parser.lexical.TokenType.RETURN;
 import static tsugi.parser.lexical.TokenType.RIGHT_PAREN;
@@ -24,7 +23,6 @@ public class LexicalScannerImpl implements LexicalScanner {
 	private boolean[] continueFlag;
 	private int lastCol;
 	private int lastLine;
-	private boolean checkForIndents;
 	private Token next;
 	
 	public LexicalScannerImpl(InputStream is) {
@@ -34,8 +32,10 @@ public class LexicalScannerImpl implements LexicalScanner {
 				new ExactTokenMatcher(RIGHT_PAREN, ")"),
 				new ExactTokenMatcher(TokenType.LEFT_BRACKET, "["),
 				new ExactTokenMatcher(TokenType.RIGHT_BRACKET, "]"),
-				new ExactTokenMatcher(NEW_LINE, "\n"),
-				new ExactTokenMatcher(NEW_LINE, "\r\n"),
+				new ExactTokenMatcher(TokenType.LEFT_BRACE, "{"),
+				new ExactTokenMatcher(TokenType.RIGHT_BRACE, "}"),
+				//new ExactTokenMatcher(NEW_LINE, "\n"),
+				//new ExactTokenMatcher(NEW_LINE, "\r\n"),
 				new ExactTokenMatcher(RETURN, "return"),
 				new ExactTokenMatcher(THEN, "then"),
 				new ExactTokenMatcher(IF,  "if"),
@@ -55,6 +55,10 @@ public class LexicalScannerImpl implements LexicalScanner {
 				new ExactTokenMatcher(TokenType.CMP_NE, "!="),
 				new ExactTokenMatcher(TokenType.COMMA, ","),
 				new ExactTokenMatcher(TokenType.COLON, ":"),
+				new ExactTokenMatcher(TokenType.DOT, "."),
+				new ExactTokenMatcher(TokenType.PACKAGE, "package"),
+				new ExactTokenMatcher(TokenType.IMPORT, "import"),
+				new ExactTokenMatcher(TokenType.FUNC, "func"),
 				new NumberMatcher(),
 				new StringTokenMatcher(),
 				new IdentifierMatcher()
@@ -82,11 +86,6 @@ public class LexicalScannerImpl implements LexicalScanner {
 	}
 	
 	private Token readNext() {
-		if(checkForIndents) {
-			Token t = checkForIndent();
-			if(t != null)
-				return t;
-		}
 		
 		removeWhiteSpace();
 		resetMatchers();
@@ -110,11 +109,16 @@ public class LexicalScannerImpl implements LexicalScanner {
 		TokenMatcher matcher = getWinners();
 		if(matcher != null) {
 			Token t = matcher.create(partialToken, lastLine, lastCol);
-			checkForIndents = t.getType() == TokenType.NEW_LINE;
+			//checkForIndents = t.getType() == TokenType.NEW_LINE;
 			return t;
 		}
 		else if(hitEndOfFile)
-			throw new UnexpectedEndOfFileException(lastLine, lastCol, partialToken);
+			return Token.builder()
+					.column(lastCol)
+					.line(lastLine)
+					.value("<EOF>")
+					.type(TokenType.EOF)
+					.build();
 		else {
 			throw new UnexpectedTokenException(lastLine, lastCol, partialToken);
 		}
@@ -138,35 +142,12 @@ public class LexicalScannerImpl implements LexicalScanner {
 	private void removeWhiteSpace() {
 		while(scanner.hasNext()){
 			char c = scanner.peek();
-			if(c == ' ')
+			if(c == ' ' || c == '\n' || c == '\r' || c == '\t')
 				scanner.next();
 			else
 				break;
 		}
 		markPosition();
-	}
-	
-	private Token checkForIndent() {
-		markPosition();
-		int count = 0;
-		while(scanner.hasNext() && count < 4) {
-			if(scanner.peek() == ' ') {
-				count++;
-				scanner.next();
-			}
-			else
-				break;
-		}
-		if(count == 4)
-			return Token.builder()
-					.column(lastCol)
-					.line(lastLine)
-					.type(TokenType.INDENT)
-					.build();
-		else if(count == 0)
-			return null;
-		else
-			throw new UnexpectedTokenException(lastCol, lastLine, String.valueOf(scanner.peek()));
 	}
 	
 	private void markPosition() {

@@ -1,5 +1,5 @@
 package tsugi.parser.model;
 
-public interface Statement {
+public class Expression {
 
 }

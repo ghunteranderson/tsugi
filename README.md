@@ -18,147 +18,161 @@ other data tied to them.
 * **space** - A collection of functions. The space can be imported and methods
 referenced using the space's name as a prefix
 
-# Comments
+# Hello World
+```kotlin
+
+func main(args:String[]){
+    printLn("Hello World")
+}
+```
+
+# Variables
+```kotlin
+// Tsugi is static typed but those types can be inferred
+var i = 1
+var d1 = 1.0, d2 = 2.0
+var s = "Hello World"
+var j = getValue();
+
+// Types must be used if the variable is not assigned a value
+var age : Int
+var firstName: String, lastName: String
+
+// Types may be included for any declaration you'd like
+var height : Int = 67
+var hobby:String="bicycle", food:String="tacos"
+```
+
+# Constants
+```kotlin
+// Constants typically will not need a type declaration
+const PI=3.14159
+// but you can include one if you'd like
+const CACHE:LocalCache=createCacheInstance()
+```
+
+# For Loops
+```java
+for var i=0; i<10; i++ {
+    printLn("Hello World")
+}
+
+for {
+    printLn("Loop until break")
+    break
+}
+
+for isRunning(){
+    printLn("Run until condition is false")
+}
+```
+
+# If/Else
 ``` java
-// Single line comments can be written like this
 
-/* While multi line comments
-can be written like this */
-```
+if a < b {
+    printLn("a<b")
+} else if b < a {
+    printLn("b<a")
+} else {
+    printLn("a==b")
+}
 
-# Importing Types, Functions, and Variables
-Types have a fully qualified name that consist of the <module>.<type>. That means
-referencing another type might look like this.
-```
-var obj = new tsugi.package.CustomType(arg1, arg2, arg3)
-```
-But we like easy to read code and this is not that. We can use the `import`
-keyword to specify any imports or aliasing. In Tsugi, with statements should be
-listed at the beginning of the file directly below the module declaration
-```
-// Types can be imported allowing them to be referenced without the module prefix
-// This works for classes, interfaces, and enums
-import tsugi.util.StringBuilder
-var bob = new StringBuilder()
+// braces are optional if block is a single statement
 
-// Spaces can be imported to access functions and constants without the module prefix
-import tsugi.util.Math
-var pipi = Math.pow(Math.PI, 2)
-
-// If we want to keep a module prefix but make it shorter, we can alias the module name
-import tsugi.long.stocking as pls
-// Using a type from this module might now look like this
-pls.Type t = new pls.Type(arg1, arg2)
-// Note that only modules can be aliased. Types and methods cannot be aliased
-```
-
-# Native Data Types
-TODO
-
-# Literals
-TODO
-
-# Variables and Constants
-```
-// Declare a new variables
-Integer number
-Double[] decimalArray
-String[] foods
-CustomType object
-
-// Set the value of the existing variable
-number = 34
-decimalArray = new Double[20]
-foods = ["Peanuts", "Noodles", "Chicken"]
-object = new CustomType()
-
-// Implicit static typing
-// This is allowed when the variable is immediately assigned a value
-var graph = new BarGraph()
-var age = 3 // Integer type
-
-// Since constants must be instantiated immediately, no type is required
-const PI = 3.14159
-```
-
-# Conditionals
-```
-// Standard if/else block
-if 30 in myList:
-    write("30 is in the list")
-else if 20 in mySet:
-    write("20 is in the set")
+if c || d
+    printLn("c||d")
 else
-    write("This is the else block")
-
-// Single line if
-if 20 < 30 then write("Always")
-else if 20<Math.random() then write("maybe")
-else then write("else block")
-
-// Mixed approach
-if arg >= 0 then return arg
-else:
-    arg = arg * -1
-    return arg
-
-// If Expression
-// Only available when an expression is expected, not a statement
-return if arg >= 0 then arg else arg*-1
-```
-
-# Ranges
-```
-let myRance = range(1, 3)         // Iterable<Integer>
-```
-
-# Iteration
-```
-// For var in iterable
-for x in range(1, 40):
-    let b = x * Math.random()
-    graph.put(x, b)
-
-// Traditional for loop
-for x=0, x<12, x++:
-    write(Math.square(x))
-
-// Standard while loop
-let stop = False
-while !stop:
-    print("Never gonna give you up")
-    stop = Math.random() < 0.1
-```
-
-# Auto-closing resources
-```
-// Auto closing resource block
-open a = gq.closable1(), b=g1.closable2(), c=gq.closable3():
-    a.apply(b).apply(c)
+    printLn("!c&&!d")
 ```
 
 # Functions
-## Standard Declaration
-Functions can be declared as reusable code
-```
-// Multi line function
-// type is Function<Double, Double, Double>
-Double random(Double min, Double max):
-    var range = max  - min
-    var random = Math.random() * range
-    random = random + min
-    return random
+```kotlin
+// Here, both parameters and function return type are declared
+func getName(fName:String, lName:String) : String {
+    return `${fName} ${lName}`
+}
 
-// Single line functions
-void sayHello() -> write("Hello") // Type is Function<Void>
+// Here we explicitly declare the return type void
+func run() : void {
+    // do something
+}
 
-void printLine(String value) -> write(value + "\n") // Type is Function<Void,String>
+
+// Return types of a function can be inferred
+// Here the return type is inferred as Int
+func guess(){
+    return 42
+}
+
+// Tsugi compiler does not recognize checked exceptions.
+// TODO: Review how JVM handles checked exceptions.
+func crash(){
+    throw new Exception()
+}
 ```
-## As Expressions (Lambdas)
-Functions can be declared as objects and stored in variables
+
+# Class
+```kotlin
+class Human {
+    var name:String
+    var address:String
+    var dob:Date
+    val ID:Long
+
+    init(id:Long){
+        ID=id
+    }
+
+    toString(){
+        return "Human[id: " + id + "]"
+    }
+
+    getId(): Long{
+        return ID
+    }
+
+    setName(name:String): void{
+        this.name = name
+    }
+}
 ```
-// Single line function (as an expression) can be passed into another function
-collection.forEach(item -> item.setDate(now))
-// They can even be stored as objects
-Function<Integer, Integer> abs = a -> Math.abs(a)
+
+# Interface
+```kotlin
+interface Car {
+    update(milliseconds:int): void
+    render(canvas: Canvas): void
+    handle(event: Event): void
+}
+```
+
+# Enum
+```kotlin
+enum Car {
+    VALUE_1(1),
+    VALUE_2(2),
+    VALUE_3(3);
+    var x: int
+
+    init(x: int){
+        this.x = x
+    }
+}
+```
+
+# Space
+``` kotlin
+space Math{
+    func add(a: Int, b: Int){
+        return a + b
+    }
+
+    func sub(a: Int, b: Int){
+        return a - b
+    }
+}
+// ...
+Math.add(2, 4)
+Math.sub(4, 6)
 ```
