@@ -1,0 +1,11 @@
+{
+  "module": {
+    "name": "stdio",
+    "location": {
+      "row": 1,
+      "col": 1
+    },
+    "imports": [],
+    "functions": []
+  }
+}

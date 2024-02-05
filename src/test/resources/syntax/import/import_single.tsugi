@@ -1,0 +1,5 @@
+module importtest;
+
+import (
+  stdio
+)

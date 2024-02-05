@@ -1,0 +1,20 @@
+module main;
+
+import (
+  stdio
+)
+
+function void main(){
+  int i = 5;
+
+  if(i < 0){
+    stdio.println("Variable 'i' is negative.");
+  }
+  elif(i == 0){
+    stdio.println("Variable 'i' is zero.");
+  }
+  else {
+    stdio.println("Variable 'i' is positive.");
+  }
+
+}

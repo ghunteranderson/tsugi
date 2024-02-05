@@ -1,0 +1,68 @@
+module = module_declaration , module_imports , module_body ;
+
+module_declaration = "module" , identifier , ";" ;
+
+module_imports = "import" , "(" , identifier { "," , identifier } , [ "," ] , ")" 
+               | "import" , "(" , ")" ;
+
+module_body = { variable_declaration | variable_assignment | function_declaration } ;
+
+variable_declaration = type , identifier , [ "=" , expression ] , ";" ;
+
+variable_assignment = variable_reference , "=" , expression , ";" ;
+
+variable_reference = identifier , [ "." , identifier ] ;
+
+function_declaration = "function" , type , identifier , "(" , [ function_parameter , { "," function_parameter } ] , ")" , statement_block ;
+
+function_parameter = type , identifier ;
+
+function_invocation = function_reference , "(" , [ expression , { "," , expression } ] , ")" ;
+
+function_reference = identifier , [ "." identifier ] ;
+
+statement_block = "{" , { statement } , "}" ;
+
+statement = variable_declaration
+          | variable_assignment
+          | expression , ";"
+          | return_statement ;
+
+return_statement = "return" , expression , ";" ;
+
+type = identifier , [ "." , identifier ] ;
+
+identifier = (letter | "_") , { letter | "_" | digit } ;
+
+letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+       | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+       | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+       | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+       | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+       | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+       | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+       | "x" | "y" | "z" ;
+
+expression = term
+           | term , "+" , term
+           | term , "-" , term
+
+term = factor
+     | factor , "*" , factor
+     | factor , "/" , factor
+
+factor = literal | ( expression ) | function_invocation
+
+literal = number | string
+
+string = "\"" , { character - "\"" } , "\""
+
+character = letter | digit | symbol | " "
+
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+number = [ "-" ] , digit , { digit } , [ "." , digit , { digit } ]
+
+symbol = "!" | "\"" | "#" | "$" | "%" | "&" | "'" | "(" | ")" | "*"
+       | "+" | "," | "-" | "." | "/" | ":" | ";" | "<" | "=" | ">"
+       | "?" | "@" | "`" | "[" | "{" | "\\" | "|" | "]" | "}" | "^" | "~" | "_"

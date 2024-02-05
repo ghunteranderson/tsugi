@@ -1,6 +1,0 @@
-[
-	{"type": "IDENTIFIER", "value": "printLn"},
-	{"type": "LEFT_PAREN"},
-	{"type": "STRING", "value": "Hello World!"},
-	{"type": "RIGHT_PAREN"}
-]

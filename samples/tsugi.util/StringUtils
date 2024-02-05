@@ -1,3 +1,0 @@
-space StringUtils:
-    func Boolean isWhiteSpace(Character c):
-        return c in [' ', '\t', '\n', '\r']

@@ -1,0 +1,7 @@
+module importtest;
+
+import (
+  stdio,
+  date,
+  http
+)

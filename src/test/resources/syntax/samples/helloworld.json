@@ -1,0 +1,45 @@
+{
+  "module": {
+    "name": "main",
+    "location": { "row": 1, "col": 1 },
+    "imports": [
+      {
+        "identifiers": ["stdio"],
+        "location": { "row": 4, "col": 3 }
+      }
+    ],
+    "functions": [
+      {
+        "name": "main",
+        "location": {"row": 7, "col": 1 },
+        "body": {
+          "location": {"row": 7, "col": 21},
+          "statements": [
+            {
+              "statementType": "invocation",
+              "location": {"row": 8, "col": 3},
+              "invocation": {
+                "location": {"row": 8, "col": 3},
+                "expressionType": "invocation",
+                "ref": {
+                  "location": {"row": 8, "col": 3},
+                  "identifiers": ["stdio", "printLn"]
+                },
+                "args": [
+                  {
+                    "location": {"row": 8, "col": 17},
+                    "expressionType": "string",
+                    "value": "Hello World"
+                  }
+                ]
+              } 
+            }
+            
+          ]
+
+        },
+        "returnType": "void"
+      }
+    ]
+  }
+}

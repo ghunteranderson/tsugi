@@ -1,6 +1,0 @@
-
-@Documented
-@Retention(RUNTIME)
-annotation Annotation:
-    String value = "Default value"
-    Long optionalLong = 123L

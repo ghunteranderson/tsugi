@@ -1,0 +1,151 @@
+module strings
+
+function string substring(string s, int first, int last) {
+  char[] chars = new char[first-last];
+  
+  int i1 = 0;
+  int i2 = first;
+  while(i2<last){
+    chars[i1] = s[i2];
+    i1++;
+    i2++;
+  }
+}
+
+function int indexOf(string s, char character) {
+  char[] chars = s.characters();
+  int size = chars.length();
+  int i = 0;
+  while(i < size) {
+    if(chars[i] == character)
+      return i; 
+  }
+  return -1;
+}
+
+----------
+module app
+
+import (
+  strings,
+  stdio
+)
+
+function int main(string[] args) {
+  string s1 = "This is a string";
+  string s2 = strings.substring(s1, 5);  // is a string
+  int index = strings.indexOf(s2, 'a'); // 3
+
+  // Function piping 
+  // Return value of first function is passed into first argument of the next function
+  loadList() -> sortIntList();
+
+  // Traditionally, this was required. 
+  // It's semantically consistent but the order it's read (left to right) is inconsistent with the control flow
+  sortIntList(loadList());
+
+  // The difference in readability is more noticeable in longer chains
+  loadList() -> sortIntList("asc") -> removeDuplicates() -> sum() -> writeToDatabase(connection);
+
+  writeToDatabase(sum(removeDuplicates(sortIntList(loadList(), "asc"))), connection);
+  
+  // Of course, traditionally you could use multiple variables but that's not always better
+  ref list = loadList();
+  ref sortedList = sortIntList(list);
+  ref uniqueList = removeDuplicates(sortedList);
+  int sumTotal = sum(uniqueList);
+  ref databaseResult = writeToDatabase(sumTotal);
+
+}
+
+function IntList loadList(){
+  ref list = IntList();
+  list.add(3);
+  list.add(5);
+  list.add(1);
+  return list;
+}
+
+function IntList sortIntList(IntList list){
+  // Implementation left as an exercise to the user
+}
+
+function void advancedChaining(){
+  
+  // Return value of funcA is passed into first argument of funcB
+  funcA() -> funcB();
+  funcA() -> funcB("arg2");
+  // Return value of funcA is passed into second argument of funcB
+  funcA() -> funcB("arg1", $1)
+  
+  // Multiple arguments from funcC are passed into funcD
+  // function (int, int) funcC()
+  // function void funcD(int a, int b)
+  funcC() -> funcD(); 
+  
+  // Multiple arguments from funcC are rearranged
+  funcC() -> funcD($2, $1)
+
+}
+
+--------- ./tsugi.collections/List.tsugi
+module tsugi.collections
+
+import (
+  arrays
+)
+
+// An array list implementation
+export class IntList {
+  int[] array;
+  int size;
+
+  export constructor(int initialSize){
+    this.array = int[initialSize];
+    this.size = 0;
+  }
+
+  export constructor(){
+    constructor(10);
+  }
+
+  export int size(){
+    return this.size;
+  }
+
+  export int add(T value){
+    if(this.size == this.array.length)
+      growArray()
+  }
+
+  void growArray(){
+    int[] newArray = int[newArray.length * 1.5];
+    arrays.copy(this.array, newArray);
+    this.array = newArray;
+  }
+}
+
+------
+module multiple_returns
+
+function void sample(){
+  int x = 0;
+  int y = 0;
+  int z = 0;
+  x, y, z = getVelocity();
+
+  // Multiple return values aslo work with function chaining
+  x, y, z = getVelocity() -> unitVector();
+}
+
+function (x, y, z) getVelocity(){
+  int x = 1;
+  int y = 2;
+  int z = 3;
+  return x, y, z;
+}
+
+function (x, y, z) unitVector(int x, int y, int z){
+  int magnitude = //...
+  return x/magnitude, y/magnitude, z/magnitude;
+}

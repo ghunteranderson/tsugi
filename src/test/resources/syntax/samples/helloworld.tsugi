@@ -1,0 +1,9 @@
+module main;
+
+import (
+  stdio
+)
+
+function void main(){
+  stdio.printLn("Hello World");
+}
