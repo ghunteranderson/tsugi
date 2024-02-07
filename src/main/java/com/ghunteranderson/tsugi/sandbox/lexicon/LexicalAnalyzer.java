@@ -179,7 +179,7 @@ public class LexicalAnalyzer {
       }
       else if (c == '.'){
         if(decimalSeen)
-          return panic();
+          throw new TsugiCompilerException(ErrorCode.INVALID_NUMBER, new SourceLocation(row, col));
         decimalSeen = true;
         builder.append(in.next());
       }

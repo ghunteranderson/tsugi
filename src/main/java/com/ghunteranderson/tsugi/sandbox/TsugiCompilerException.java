@@ -20,4 +20,14 @@ public class TsugiCompilerException extends RuntimeException {
     this.location = location;
   }
 
+  public TsugiCompilerException(ErrorCode code, SourceLocation location, Throwable ex){
+    this(code, location, code.getDefaultMessage(), ex);
+  }
+
+  public TsugiCompilerException(ErrorCode code, SourceLocation location, String message, Throwable ex){
+    super(message, ex);
+    this.code = code;
+    this.location = location;
+  }
+
 }

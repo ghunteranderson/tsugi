@@ -85,38 +85,38 @@ public class LexicalAnalyzerTest {
         """));
 
     // Module
-    assertNext(Token.MODULE, "module", 0, 0);
-    assertNext(Token.IDENTIFIER, "greeting", 0, 0);
-    assertNext(Token.SEMICOLON, ";", 0, 0);
+    assertNext(Token.MODULE, "module");
+    assertNext(Token.IDENTIFIER, "greeting");
+    assertNext(Token.SEMICOLON, ";");
     // Import
-    assertNext(Token.IMPORT, "import", 0, 0);
-    assertNext(Token.PAREN_L, "(", 0, 0);
-    assertNext(Token.IDENTIFIER, "stdio", 0, 0);
-    assertNext(Token.PAREN_R, ")", 0, 0);
+    assertNext(Token.IMPORT, "import");
+    assertNext(Token.PAREN_L, "(");
+    assertNext(Token.IDENTIFIER, "stdio");
+    assertNext(Token.PAREN_R, ")");
     // Function
-    assertNext(Token.FUNCTION, "function", 0, 0);
-    assertNext(Token.IDENTIFIER, "void", 0, 0);
-    assertNext(Token.IDENTIFIER, "main", 0, 0);
-    assertNext(Token.PAREN_L, "(", 0, 0);
-    assertNext(Token.IDENTIFIER, "string", 0, 0);
-    assertNext(Token.BRACKET_L, "[", 0, 0);
-    assertNext(Token.BRACKET_R, "]", 0, 0);
-    assertNext(Token.IDENTIFIER, "args", 0, 0);
-    assertNext(Token.PAREN_R, ")", 0, 0);
-    assertNext(Token.BRACE_L, "{", 0, 0);
+    assertNext(Token.FUNCTION, "function");
+    assertNext(Token.IDENTIFIER, "void");
+    assertNext(Token.IDENTIFIER, "main");
+    assertNext(Token.PAREN_L, "(");
+    assertNext(Token.IDENTIFIER, "string");
+    assertNext(Token.BRACKET_L, "[");
+    assertNext(Token.BRACKET_R, "]");
+    assertNext(Token.IDENTIFIER, "args");
+    assertNext(Token.PAREN_R, ")");
+    assertNext(Token.BRACE_L, "{");
     //Println
-    assertNext(Token.IDENTIFIER, "stdio", 0, 0);
-    assertNext(Token.DOT, ".", 0, 0);
-    assertNext(Token.IDENTIFIER, "out", 0, 0);
-    assertNext(Token.DOT, ".", 0, 0);
-    assertNext(Token.IDENTIFIER, "println", 0, 0);
-    assertNext(Token.PAREN_L, "(", 0, 0);
-    assertNext(Token.STRING, "Hello World!", 0, 0);
-    assertNext(Token.PAREN_R, ")", 0, 0);
-    assertNext(Token.SEMICOLON, ";", 0, 0);
+    assertNext(Token.IDENTIFIER, "stdio");
+    assertNext(Token.DOT, ".");
+    assertNext(Token.IDENTIFIER, "out");
+    assertNext(Token.DOT, ".");
+    assertNext(Token.IDENTIFIER, "println");
+    assertNext(Token.PAREN_L, "(");
+    assertNext(Token.STRING, "Hello World!");
+    assertNext(Token.PAREN_R, ")");
+    assertNext(Token.SEMICOLON, ";");
 
-    assertNext(Token.BRACE_R, "}", 0, 0);
-    assertNext(Token.EOF, "", 0, 0);
+    assertNext(Token.BRACE_R, "}");
+    assertNext(Token.EOF, "");
 
   }
 
@@ -136,10 +136,10 @@ public class LexicalAnalyzerTest {
     lexicalAnalyzer = new LexicalAnalyzer(TestUtils.streamString("""
       string s = "Hello World";
       """));
-    assertNext(Token.IDENTIFIER, "string", 0, 0);
-    assertNext(Token.IDENTIFIER, "s", 0, 0);
-    assertNext(Token.EQUALS, "=", 0, 0);
-    assertNext(Token.STRING, "Hello World", 0, 0);
+    assertNext(Token.IDENTIFIER, "string");
+    assertNext(Token.IDENTIFIER, "s");
+    assertNext(Token.EQUALS, "=");
+    assertNext(Token.STRING, "Hello World");
   }
 
   @Test
@@ -147,10 +147,10 @@ public class LexicalAnalyzerTest {
     lexicalAnalyzer = new LexicalAnalyzer(TestUtils.streamString("""
       string s = "\\t \\' \\" \\r \\\\ \\n \\f \\b";
       """));
-    assertNext(Token.IDENTIFIER, "string", 0, 0);
-    assertNext(Token.IDENTIFIER, "s", 0, 0);
-    assertNext(Token.EQUALS, "=", 0, 0);
-    assertNext(Token.STRING, "\t \' \" \r \\ \n \f \b", 0, 0);
+    assertNext(Token.IDENTIFIER, "string", 1, 1);
+    assertNext(Token.IDENTIFIER, "s", 1, 8);
+    assertNext(Token.EQUALS, "=", 1, 10);
+    assertNext(Token.STRING, "\t \' \" \r \\ \n \f \b", 1, 12);
   }
 
   @Test
@@ -158,10 +158,10 @@ public class LexicalAnalyzerTest {
     lexicalAnalyzer = new LexicalAnalyzer(TestUtils.streamString("""
       int i = 2024;
       """));
-    assertNext(Token.IDENTIFIER, "int", 0, 0);
-    assertNext(Token.IDENTIFIER, "i", 0, 0);
-    assertNext(Token.EQUALS, "=", 0, 0);
-    assertNext(Token.NUMBER, "2024", 0, 0);
+    assertNext(Token.IDENTIFIER, "int", 1, 1);
+    assertNext(Token.IDENTIFIER, "i", 1, 5);
+    assertNext(Token.EQUALS, "=", 1, 7);
+    assertNext(Token.NUMBER, "2024", 1, 9);
   }
 
   @Test
@@ -169,10 +169,10 @@ public class LexicalAnalyzerTest {
     lexicalAnalyzer = new LexicalAnalyzer(TestUtils.streamString("""
       int i = -3028;
       """));
-    assertNext(Token.IDENTIFIER, "int", 0, 0);
-    assertNext(Token.IDENTIFIER, "i", 0, 0);
-    assertNext(Token.EQUALS, "=", 0, 0);
-    assertNext(Token.NUMBER, "-3028", 0, 0);
+    assertNext(Token.IDENTIFIER, "int", 1, 1);
+    assertNext(Token.IDENTIFIER, "i", 1, 5);
+    assertNext(Token.EQUALS, "=", 1, 7);
+    assertNext(Token.NUMBER, "-3028", 1, 9);
   }
 
   @Test
@@ -180,10 +180,10 @@ public class LexicalAnalyzerTest {
     lexicalAnalyzer = new LexicalAnalyzer(TestUtils.streamString("""
       int i = -30.839;
       """));
-    assertNext(Token.IDENTIFIER, "int", 0, 0);
-    assertNext(Token.IDENTIFIER, "i", 0, 0);
-    assertNext(Token.EQUALS, "=", 0, 0);
-    assertNext(Token.NUMBER, "-30.839", 0, 0);
+    assertNext(Token.IDENTIFIER, "int");
+    assertNext(Token.IDENTIFIER, "i");
+    assertNext(Token.EQUALS, "=");
+    assertNext(Token.NUMBER, "-30.839");
   }
 
   @Test
@@ -191,14 +191,20 @@ public class LexicalAnalyzerTest {
     lexicalAnalyzer = new LexicalAnalyzer(TestUtils.streamString("""
       int i = -30.83.9;
       """));
-    assertNext(Token.IDENTIFIER, "int", 0, 0);
-    assertNext(Token.IDENTIFIER, "i", 0, 0);
-    assertNext(Token.EQUALS, "=", 0, 0);
+    assertNext(Token.IDENTIFIER, "int");
+    assertNext(Token.IDENTIFIER, "i");
+    assertNext(Token.EQUALS, "=");
     assertError(ErrorCode.INVALID_NUMBER);
   }
 
   private void assertNext(Token token, String lexeme, int row, int col) {
     assertEquals(new Lexeme(token, lexeme, row, col), lexicalAnalyzer.next());
+  }
+
+  private void assertNext(Token token, String lexeme) {
+    var next = lexicalAnalyzer.next();
+    assertEquals(token, next.token());
+    assertEquals(lexeme, lexeme);
   }
 
   private void assertError(ErrorCode code) {

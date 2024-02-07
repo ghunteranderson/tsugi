@@ -1,24 +1,20 @@
 package com.ghunteranderson.tsugi.sandbox.lexicon;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
 
 import com.ghunteranderson.tsugi.sandbox.ErrorCode;
 import com.ghunteranderson.tsugi.sandbox.TsugiCompilerException;
 
-public class CharacterScanner implements Closeable {
+public class CharacterScanner {
 
-  private final Scanner in;
+  private final CharacterInputStream in;
   private Character next = null;
   private int row = 1;
   private int col = 0; // This is immediately incremented when the first character is read
 
   public CharacterScanner(InputStream in){
-    this.in = new Scanner(in, StandardCharsets.UTF_8);
-    this.in.useDelimiter("");
+    this.in = new Utf8CharacterInputStream(in);
     populateNext();
     skipWhiteSpace(); // Move cursor to first non-whitespace character in file
   }
@@ -55,7 +51,11 @@ public class CharacterScanner implements Closeable {
       col++;
     }
     else{
-      next = in.next().charAt(0);
+      try{
+        next = in.next();
+      } catch(IOException ex){
+        throw new TsugiCompilerException(ErrorCode.IO_ERROR, new SourceLocation(row, col), ex);
+      }
       if(next == '\n'){
         row++;
         col = 0;
@@ -69,11 +69,6 @@ public class CharacterScanner implements Closeable {
     while(next != null && LiteralUtils.isWhiteSpace(next)){
       populateNext();
     }
-  }
-
-  @Override
-  public void close() throws IOException {
-    this.in.close();
   }
 
   private TsugiCompilerException buildEndOfSourceException(){
