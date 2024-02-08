@@ -1,0 +1,19 @@
+module:
+  name: math
+  imports: []
+  functions:
+  - name: main
+    returnType:
+      identifiers:
+      - void
+    statements:
+    - statementType: function
+      ref:
+        identifiers:
+        - math
+        - add
+      args:
+      - expressionType: number
+        value: '3'
+      - expressionType: number
+        value: '0.5'

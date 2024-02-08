@@ -1,0 +1,6 @@
+module variables;
+
+function void main() {
+  float time;
+  vectors.Vector2f direction;
+}

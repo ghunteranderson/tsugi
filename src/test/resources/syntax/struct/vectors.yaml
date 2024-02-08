@@ -1,0 +1,16 @@
+module:
+  name: vectors
+  imports: []
+  functions: []
+  structs:
+  - name: Vector3f
+    members:
+    - name: x
+      type:
+      - float
+    - name: "y"
+      type:
+      - float
+    - name: z
+      type:
+      - float

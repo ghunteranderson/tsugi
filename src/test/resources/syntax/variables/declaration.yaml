@@ -1,0 +1,19 @@
+module:
+  name: variables
+  functions:
+  - name: main
+    returnType:
+      identifiers:
+      - void
+    statements:
+    - statementType: declaration
+      type:
+        identifiers:
+        - float
+      name: time
+    - statementType: declaration
+      type:
+        identifiers:
+        - vectors
+        - Vector3f
+      name: direction

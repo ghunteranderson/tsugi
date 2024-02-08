@@ -1,0 +1,19 @@
+module:
+  name: main
+  imports:
+  - identifiers:
+    - stdio
+  functions:
+  - name: main
+    returnType:
+      identifiers:
+      - void
+    statements:
+    - statementType: function
+      ref:
+        identifiers:
+        - stdio
+        - printLn
+      args:
+      - expressionType: string
+        value: Hello World

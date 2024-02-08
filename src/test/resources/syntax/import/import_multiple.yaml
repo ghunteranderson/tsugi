@@ -1,0 +1,10 @@
+module:
+  name: importtest
+  imports:
+  - identifiers:
+    - stdio
+  - identifiers:
+    - date
+  - identifiers:
+    - http
+  functions: []

@@ -37,15 +37,10 @@ public class Utf8CharacterInputStream implements CharacterInputStream {
         throw new IOException("Utf8CharacterInputStream doesn't support 4 byte characters");
       }
       else if ((codePoint & 0b11100000) == 0b11100000){
-        System.out.println("A: " + Integer.toBinaryString(codePoint));
         codePoint = codePoint & 0b00001111; // Chomp off the upper 4 bytes
-        System.out.println("B: " + Integer.toBinaryString(codePoint));
         codePoint = (codePoint << 6) | (((int)byteBuffer[bbt]) & 0b00111111);
-        System.out.println("C: " + Integer.toBinaryString(codePoint));
         bbt  = (bbt+1) % BUFFER_SIZE;
         codePoint = (codePoint << 6) | (((int)byteBuffer[bbt]) & 0b00111111);
-        System.out.println("D: " + Integer.toBinaryString(codePoint));
-        System.out.println("D: " + codePoint);
         bbt  = (bbt+1) % BUFFER_SIZE;
       }
       else if ((codePoint & 0b11000000) == 0b11000000){

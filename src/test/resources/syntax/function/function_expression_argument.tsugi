@@ -1,0 +1,5 @@
+module expression;
+
+function void main(){
+  sqrt(9 + 8 * 2);
+}

@@ -1,0 +1,28 @@
+module:
+  name: expression
+  imports: []
+  functions:
+  - name: main
+    returnType:
+      identifiers:
+      - void
+    statements:
+    - statementType: function
+      ref:
+        identifiers:
+        - sqrt
+      args:
+      - expressionType: operation
+        op: ADD
+        left:
+          expressionType: number
+          value: '9'
+        right:
+          expressionType: operation
+          op: MUL
+          left:
+            expressionType: number
+            value: '8'
+          right:
+            expressionType: number
+            value: '2'

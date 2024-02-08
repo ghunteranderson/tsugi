@@ -1,0 +1,6 @@
+module:
+  name: importtest
+  imports:
+  - identifiers:
+    - stdio
+  functions: []

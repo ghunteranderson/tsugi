@@ -1,0 +1,4 @@
+module:
+  name: importtest
+  imports: []
+  functions: []

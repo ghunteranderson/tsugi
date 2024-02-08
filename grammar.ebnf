@@ -1,25 +1,33 @@
 module = module_declaration , module_imports , module_body ;
 
-module_declaration = "module" , identifier , ";" ;
+module_declaration = "module" , qualified_identifier , ";" ;
 
-module_imports = "import" , "(" , identifier { "," , identifier } , [ "," ] , ")" 
+module_imports = "import" , "(" , qualified_identifier { "," , qualified_identifier } , [ "," ] , ")" 
                | "import" , "(" , ")" ;
 
-module_body = { variable_declaration | variable_assignment | function_declaration } ;
+module_body = { variable_declaration | function_declaration } ;
 
-variable_declaration = type , identifier , [ "=" , expression ] , ";" ;
+variable_declaration = qualified_identifier , identifier , [ "=" , expression ] , ";" ;
 
-variable_assignment = variable_reference , "=" , expression , ";" ;
+variable_assignment = qualified_identifier , "=" , expression , ";" ;
 
-variable_reference = identifier , [ "." , identifier ] ;
+struct_declaration = "struct" , identifier , "{" , "}"
+                   | "struct", identifier , "{" , struct_member , { "," , struct_member} , [ "," ] , "}" ;
 
-function_declaration = "function" , type , identifier , "(" , [ function_parameter , { "," function_parameter } ] , ")" , statement_block ;
+struct_constructor = "new" , qualified_identifier , "{" , "}" 
+                   | "new" , qualified_identifier , "{" , struct_constructor_assignment , { "," , struct_constructor_assignment} , [ "," ] , "}" ;
 
-function_parameter = type , identifier ;
+struct_constructor_assignment = identifier , ":" , expression
 
-function_invocation = function_reference , "(" , [ expression , { "," , expression } ] , ")" ;
+struct_member = qualified_identifier , identifier;
 
-function_reference = identifier , [ "." identifier ] ;
+function_declaration = "function" , qualified_identifier , identifier , "(" , [ function_parameter , { "," function_parameter } ] , ")" , statement_block ;
+
+function_parameter = qualified_identifier , identifier ;
+
+function_invocation = qualified_identifier , "(" , [ expression , { "," , expression } ] , ")" ;
+
+qualified_identifier identifier ,  [ "." identifier ] ;
 
 statement_block = "{" , { statement } , "}" ;
 
@@ -29,8 +37,6 @@ statement = variable_declaration
           | return_statement ;
 
 return_statement = "return" , expression , ";" ;
-
-type = identifier , [ "." , identifier ] ;
 
 identifier = (letter | "_") , { letter | "_" | digit } ;
 
@@ -43,6 +49,8 @@ letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
        | "q" | "r" | "s" | "t" | "u" | "v" | "w"
        | "x" | "y" | "z" ;
 
+3 * 4 + 1 * 4
+
 expression = term
            | term , "+" , term
            | term , "-" , term
@@ -51,7 +59,7 @@ term = factor
      | factor , "*" , factor
      | factor , "/" , factor
 
-factor = literal | ( expression ) | function_invocation
+factor = literal | qualified_identifier | ( expression ) | function_invocation
 
 literal = number | string
 

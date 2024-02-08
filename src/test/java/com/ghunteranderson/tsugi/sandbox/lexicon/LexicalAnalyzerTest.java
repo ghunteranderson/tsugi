@@ -121,6 +121,49 @@ public class LexicalAnalyzerTest {
   }
 
   @Test
+  void test_structDefinition(){
+    lexicalAnalyzer = new LexicalAnalyzer(TestUtils.streamString("""
+    struct Vector2f {
+      float x,
+      float y
+    }
+    """));
+    assertNext(Token.STRUCT, "struct");
+    assertNext(Token.IDENTIFIER, "Vector2f");
+    assertNext(Token.BRACE_L, "{");
+    assertNext(Token.IDENTIFIER, "float");
+    assertNext(Token.IDENTIFIER, "x");
+    assertNext(Token.COMMA, ",");
+    assertNext(Token.IDENTIFIER, "float");
+    assertNext(Token.IDENTIFIER, "y");
+    assertNext(Token.BRACE_R, "}");
+  }
+
+  @Test
+  void test_structConstructor(){
+    lexicalAnalyzer = new LexicalAnalyzer(TestUtils.streamString("""
+    Vector2f velocity = new Vector2f {
+      x: 12.2,
+      y: -38.2
+    }
+    """));
+    assertNext(Token.IDENTIFIER, "Vector2f");
+    assertNext(Token.IDENTIFIER, "velocity");
+    assertNext(Token.EQUALS, "=");
+    assertNext(Token.NEW, "new");
+    assertNext(Token.IDENTIFIER, "Vector2f");
+    assertNext(Token.BRACE_L, "{");
+    assertNext(Token.IDENTIFIER, "x");
+    assertNext(Token.COLON, ":");
+    assertNext(Token.NUMBER, "12.2");
+    assertNext(Token.COMMA, ",");
+    assertNext(Token.IDENTIFIER, "y");
+    assertNext(Token.COLON, ":");
+    assertNext(Token.NUMBER, "-38.2");
+    assertNext(Token.BRACE_R, "}");
+  }
+
+  @Test
   void test_stringAssignment_empty(){
     lexicalAnalyzer = new LexicalAnalyzer(TestUtils.streamString("""
       string s = "";

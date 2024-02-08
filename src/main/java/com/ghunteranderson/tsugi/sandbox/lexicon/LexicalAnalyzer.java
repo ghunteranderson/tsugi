@@ -82,6 +82,10 @@ public class LexicalAnalyzer {
         return Token.IMPORT;
       case ("function"):
         return Token.FUNCTION;
+      case ("struct"):
+        return Token.STRUCT;
+      case ("new"):
+        return Token.NEW;
       default:
         return Token.IDENTIFIER;
     }
@@ -113,8 +117,18 @@ public class LexicalAnalyzer {
         return new Lexeme(Token.EQUALS, "=", row, col);
       case (','):
         return new Lexeme(Token.COMMA, ",", row, col);
+      case (':'):
+        return new Lexeme(Token.COLON, ":", row, col);
+      case ('-'):
+        return new Lexeme(Token.MINUS, "-", row, col);
+      case ('+'):
+        return new Lexeme(Token.PLUS, "+", row, col);
+      case ('*'):
+        return new Lexeme(Token.ASTERISK, "*", row, col);
+      case ('/'):
+        return new Lexeme(Token.SLASH_F, "/", row, col);
       default:
-        return panic();
+        throw new TsugiCompilerException(ErrorCode.LEXICAL_PANIC, new SourceLocation(row, col), "Unrecognized symbol: " + next);
     }
 
   }

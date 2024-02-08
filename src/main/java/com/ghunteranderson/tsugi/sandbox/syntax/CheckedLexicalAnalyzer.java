@@ -30,7 +30,7 @@ public class CheckedLexicalAnalyzer {
       throw new TsugiCompilerException(
         ErrorCode.INVALID_SYNTAX,
         next.location(),
-        "Expected a " + expectedToken + " but found token " + next.lexeme());
+        "Expected a " + expectedToken + " but found token: " + next.lexeme());
     }
     return next;
   }

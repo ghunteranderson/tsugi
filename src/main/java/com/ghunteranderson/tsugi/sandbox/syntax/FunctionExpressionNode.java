@@ -10,14 +10,14 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class FunctionInvocationNode extends ExpressionNode {
+public class FunctionExpressionNode extends ExpressionNode {
   
   public static final String EXPRESSION_TYPE = "invocation";
   
   private QualifiedRefNode ref;
   private List<ExpressionNode> args;
   
-  public FunctionInvocationNode(SourceLocation location) {
+  public FunctionExpressionNode(SourceLocation location) {
     super(EXPRESSION_TYPE, location);
     args = new LinkedList<>();
   }

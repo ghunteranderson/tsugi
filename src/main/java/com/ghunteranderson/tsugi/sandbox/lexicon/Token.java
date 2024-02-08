@@ -5,6 +5,8 @@ public enum Token {
   MODULE,
   IMPORT,
   FUNCTION,
+  STRUCT,
+  NEW,
 
   // Meta
   IDENTIFIER,
@@ -22,8 +24,13 @@ public enum Token {
   BRACKET_R,
   DOT,
   EQUALS,
-  MINUS,
   COMMA,
+  COLON,
 
+  // Operations
+  MINUS,
+  PLUS,
+  ASTERISK,
+  SLASH_F,
   ;
 }

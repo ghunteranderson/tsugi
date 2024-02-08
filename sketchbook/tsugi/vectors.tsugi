@@ -1,0 +1,30 @@
+modules vectors
+
+import (
+  math
+)
+
+export struct Vector3f {
+  float x;
+  float y;
+  float z;
+}
+
+export function void scale(Vector3f vector, float magnitude){
+  float mag = math.sqrt(vector.x^2 + vector.y^2 + vector.z^2);
+  vector.x = x/mag;
+  vector.y = y/mag;
+  vector.z = z/mag;
+}
+
+export function void unit(Vector3f vector){
+  vector.scale(1f);
+}
+
+export function Vector3f copy(Vector3f vector){
+  return new Vector3f {
+    x: vector.x,
+    y: vector.y,
+    z: vector.z
+  };
+}

@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 public class ModuleNode extends GenericNode {
   private String name;
   private List<QualifiedRefNode> imports = new LinkedList<>();
-  private List<FunctionNode> functions = new LinkedList<>();
+  private List<FunctionDeclarationNode> functions = new LinkedList<>();
   
 
   public ModuleNode(String name, SourceLocation location){

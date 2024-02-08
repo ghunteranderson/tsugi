@@ -1,0 +1,5 @@
+module variables;
+
+function void main() {
+  cart.apples = math.min(cart.apples, inventory.apples * 0.8);
+}
