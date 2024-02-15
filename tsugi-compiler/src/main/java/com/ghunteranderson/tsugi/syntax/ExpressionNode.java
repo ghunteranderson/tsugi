@@ -1,19 +1,22 @@
 package com.ghunteranderson.tsugi.syntax;
 
 import com.ghunteranderson.tsugi.lexicon.SourceLocation;
+import com.ghunteranderson.tsugi.semantics.SymbolTable.TypeSymbol;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class ExpressionNode extends GenericNode {
+@EqualsAndHashCode
+public abstract class ExpressionNode implements AstVisitable {
 
   private final String expressionType;
+  private SourceLocation location;
+  private TypeSymbol typeSymbol;
 
   public ExpressionNode(String expressionType, SourceLocation location){
-    super(location);
     this.expressionType = expressionType;
+    this.location = location;
   }
 
 }

@@ -15,5 +15,10 @@ public class VariableDeclarationNode extends StatementNode {
   public VariableDeclarationNode(SourceLocation location){
     super("variable_declaration", location);
   }
-  
+
+  @Override
+  public void acceptVisitor(AstVisitor visitor) {
+    visitor.visit(this);
+  }
+
 }

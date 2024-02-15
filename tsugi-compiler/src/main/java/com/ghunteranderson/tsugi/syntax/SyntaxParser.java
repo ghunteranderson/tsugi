@@ -34,7 +34,7 @@ public class SyntaxParser {
       else if(token.is(Token.IMPORT))
         module.setImports(parseImports());
       else if(token.is(Token.FUNCTION))
-        module.getFunctions().add(parseFunctionDeclaration());
+        module.getFunctions().add(parseFunctionDeclaration(module));
       else
         throw new TsugiCompilerException(
           ErrorCode.INVALID_SYNTAX,
@@ -77,7 +77,7 @@ public class SyntaxParser {
     return imports;
   }
 
-  private FunctionDeclarationNode parseFunctionDeclaration(){
+  private FunctionDeclarationNode parseFunctionDeclaration(ModuleNode parent){
     // Parse Declaration
     var funcToken = in.next(Token.FUNCTION);
     var returnType = parseQualifiedRef();
@@ -89,7 +89,7 @@ public class SyntaxParser {
 
     var body = parseStatementBlock();
 
-    var function = new FunctionDeclarationNode(funcName.lexeme(), funcToken.location());
+    var function = new FunctionDeclarationNode(parent, funcName.lexeme(), funcToken.location());
     function.setReturnType(returnType);
     function.setStatements(body);
     return function;
@@ -135,11 +135,9 @@ public class SyntaxParser {
       next = in.peek();
       if(next.is(Token.EQUALS)){
         var exp = parseExpression();
-        var varRef = new QualifiedRefNode(varName.location());
-        varRef.setIdentifiers(List.of(varName.lexeme()));
-        var varAssign =  new VariableAssignmentNode(next.location());
+        var varAssign = new VariableAssignmentNode(next.location());
         varAssign.setValue(exp);
-        varAssign.setRef(varRef);
+        varAssign.setName(varName.lexeme());
         statements.add(varAssign);
       }
     }

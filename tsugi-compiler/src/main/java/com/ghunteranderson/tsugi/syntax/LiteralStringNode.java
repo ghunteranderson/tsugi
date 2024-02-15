@@ -11,4 +11,9 @@ public class LiteralStringNode extends ExpressionNode {
     super(EXPRESSION_TYPE, location);
     this.value = value;
   }
+
+  @Override
+  public void acceptVisitor(AstVisitor visitor) {
+    visitor.visit(this);
+  }
 }

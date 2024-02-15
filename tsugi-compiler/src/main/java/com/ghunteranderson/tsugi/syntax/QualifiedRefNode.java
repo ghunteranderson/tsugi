@@ -6,17 +6,16 @@ import java.util.List;
 import com.ghunteranderson.tsugi.lexicon.SourceLocation;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class QualifiedRefNode extends GenericNode {
+public class QualifiedRefNode {
 
+  private SourceLocation location;
   private List<String> identifiers;
 
   public QualifiedRefNode(SourceLocation location){
-    super(location);
+    this.location = location;
     identifiers = new ArrayList<>();
   }
-  
+
 }

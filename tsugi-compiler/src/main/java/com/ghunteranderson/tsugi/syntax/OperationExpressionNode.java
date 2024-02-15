@@ -23,5 +23,12 @@ public class OperationExpressionNode extends ExpressionNode {
     MUL,
     DIV
   }
+
+  @Override
+  public void acceptVisitor(AstVisitor visitor) {
+    left.acceptVisitor(visitor);
+    right.acceptVisitor(visitor);
+    visitor.visit(this);
+  }
   
 }

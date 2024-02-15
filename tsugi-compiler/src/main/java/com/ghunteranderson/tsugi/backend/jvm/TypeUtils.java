@@ -19,7 +19,6 @@ public class TypeUtils {
     return new JConst_Utf8Info(typeToDescriptor(type));
   }
 
-
   private static String typeToDescriptor(QualifiedRefNode returnType){
     var idents = returnType.getIdentifiers();
 

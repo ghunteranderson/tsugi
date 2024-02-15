@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ghunteranderson.tsugi.lexicon.SourceLocation;
+import com.ghunteranderson.tsugi.semantics.SymbolTable.FunctionSymbol;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,10 +17,17 @@ public class FunctionExpressionNode extends ExpressionNode {
   
   private QualifiedRefNode ref;
   private List<ExpressionNode> args;
+  private FunctionSymbol functionSymbol;
   
   public FunctionExpressionNode(SourceLocation location) {
     super(EXPRESSION_TYPE, location);
     args = new LinkedList<>();
   }
+
+  @Override
+  public void acceptVisitor(AstVisitor visitor) {
+    visitor.visit(this);
+  }
+
 
 }

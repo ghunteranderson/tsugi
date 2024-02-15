@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class StatementNode extends GenericNode {
+@EqualsAndHashCode
+public abstract class StatementNode implements AstVisitable {
 
   private final String statementType;
+  private SourceLocation location;
 
   public StatementNode(String statementType, SourceLocation location){
-    super(location);
+    this.location = location;
     this.statementType = statementType;
   }
   

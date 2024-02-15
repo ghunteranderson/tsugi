@@ -12,6 +12,8 @@ public enum ErrorCode {
   INVALID_NUMBER(0004, "Invalid string format."),
   INVALID_SYNTAX(0005, "Invalid syntax."),
   IO_ERROR(0006, "IO Exception."),
+  UNKNOWN_ERROR(0007, "Unknown error."),
+  INVALID_SEMANTICS(0005, "Invalid semantics."),
   ;
   private final int number;
   private final String defaultMessage;

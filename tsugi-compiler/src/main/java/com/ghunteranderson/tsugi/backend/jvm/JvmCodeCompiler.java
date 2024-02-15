@@ -38,7 +38,7 @@ public class JvmCodeCompiler {
 
   private static void compileStatement(CompilerContext ctx, List<JInst> instructions, StatementNode statement) {
     if(statement instanceof VariableDeclarationNode stat){
-      ctx.locals.addLocal(TypeUtils.typeForVar(stat.getName(), stat.getType()));
+      ctx.locals.add(TypeUtils.typeForVar(stat.getName(), stat.getType()));
     }
     else if(statement instanceof VariableAssignmentNode stat){
       

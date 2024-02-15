@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ghunteranderson.tsugi.lexicon.SourceLocation;
+import com.ghunteranderson.tsugi.semantics.SymbolTable.FunctionSymbol;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,10 +15,20 @@ public class FunctionStatementNode extends StatementNode {
   
   private QualifiedRefNode ref;
   private List<ExpressionNode> args;
+  private FunctionSymbol functionSymbol;
 
   public FunctionStatementNode(SourceLocation location){
     super("function", location);
     args = new ArrayList<>();
-  } 
+  }
+
+  @Override
+  public void acceptVisitor(AstVisitor visitor) {
+    for(var a : args)
+      a.acceptVisitor(visitor);
+    visitor.visit(this);
+  }
+
+  
 
 }

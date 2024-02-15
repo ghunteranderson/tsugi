@@ -8,6 +8,18 @@ public abstract class JInst {
     this.opcode = opcode;
   }
 
+  public static JInst_LiteralArg _astore(int index){
+    return new JInst_LiteralArg(OpCode._astore, index, 1);
+  }
+
+  public static JInst_LiteralArg _dstore(int index){
+    return new JInst_LiteralArg(OpCode._dstore, index, 1);
+  }
+
+  public static JInst_LiteralArg _fstore(int index){
+    return new JInst_LiteralArg(OpCode._fstore, index, 1);
+  }
+
   public static JInst_ConstPoolArg _getstatic(JConst_FieldRefInfo field){
     return new JInst_ConstPoolArg(OpCode._getstatic, field);
   }
@@ -24,12 +36,20 @@ public abstract class JInst {
     return JInst._invokevirtual(new JConst_MethodRefInfo(clazz, methodName, methodDescriptor));
   }
 
+  public static JInst_LiteralArg _istore(int index){
+    return new JInst_LiteralArg(OpCode._istore, index, 1);
+  }
+
   public static JInst_ConstPoolArg _ldc_w(JConst constant){
     return new JInst_ConstPoolArg(OpCode._ldc_w, constant);
   }
   
   public static JInst_ConstPoolArg _ldc_w(String string){
     return JInst._ldc_w(new JConst_StringInfo(string));
+  }
+
+  public static JInst_LiteralArg _lstore(int index){
+    return new JInst_LiteralArg(OpCode._lstore, index, 1);
   }
 
   public static JInst_NoArgs _return(){
