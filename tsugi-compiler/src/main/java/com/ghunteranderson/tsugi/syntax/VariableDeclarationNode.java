@@ -17,8 +17,8 @@ public class VariableDeclarationNode extends StatementNode {
   }
 
   @Override
-  public void acceptVisitor(AstVisitor visitor) {
-    visitor.visit(this);
+  public void acceptCodeVisitor(AstCodeVisitor visitor) {
+    visitor.visitStatement(this);
   }
 
 }

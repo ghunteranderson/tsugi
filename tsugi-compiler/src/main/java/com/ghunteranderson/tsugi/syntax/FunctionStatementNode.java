@@ -23,10 +23,10 @@ public class FunctionStatementNode extends StatementNode {
   }
 
   @Override
-  public void acceptVisitor(AstVisitor visitor) {
+  public void acceptCodeVisitor(AstCodeVisitor visitor) {
     for(var a : args)
-      a.acceptVisitor(visitor);
-    visitor.visit(this);
+      a.acceptCodeVisitor(visitor);
+    visitor.visitStatement(this);
   }
 
   

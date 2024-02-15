@@ -5,13 +5,14 @@ import java.util.List;
 
 import com.ghunteranderson.tsugi.lexicon.SourceLocation;
 import com.ghunteranderson.tsugi.semantics.SymbolTable.ModuleSymbol;
+import com.ghunteranderson.tsugi.syntax.AstElementVisitor.AstElementVisitable;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode
-public class ModuleNode implements AstVisitable {
+public class ModuleNode implements AstElementVisitable {
   private String name;
   private SourceLocation location;
   private List<QualifiedRefNode> imports = new LinkedList<>();
@@ -25,10 +26,10 @@ public class ModuleNode implements AstVisitable {
   }
 
   @Override
-  public void acceptVisitor(AstVisitor v) {
-    v.visit(this);
+  public void acceptElementVisitor(AstElementVisitor v) {
+    v.visitModule(this);
     for(var func : functions){
-      func.acceptVisitor(v);
+      func.acceptElementVisitor(v);
     }
   }
 }

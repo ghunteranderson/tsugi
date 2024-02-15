@@ -12,7 +12,7 @@ public class VariableExpressionNode extends ExpressionNode {
   }
 
   @Override
-  public void acceptVisitor(AstVisitor visitor) {
-    visitor.visit(this);
+  public void acceptCodeVisitor(AstCodeVisitor visitor) {
+    visitor.visitExpression(this);
   }
 }

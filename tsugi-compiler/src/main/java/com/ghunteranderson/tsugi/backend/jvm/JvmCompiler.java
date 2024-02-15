@@ -3,19 +3,16 @@ package com.ghunteranderson.tsugi.backend.jvm;
 import java.util.List;
 
 import com.ghunteranderson.java.bytecode.JAccessFlags;
-import com.ghunteranderson.java.bytecode.JAttr;
 import com.ghunteranderson.java.bytecode.JAttr_Code;
 import com.ghunteranderson.java.bytecode.JClassFile;
 import com.ghunteranderson.java.bytecode.JConst_ClassInfo;
-import com.ghunteranderson.java.bytecode.JConst_StringInfo;
 import com.ghunteranderson.java.bytecode.JConst_Utf8Info;
 import com.ghunteranderson.java.bytecode.JInst;
 import com.ghunteranderson.java.bytecode.JMethodInfo;
 import com.ghunteranderson.tsugi.ErrorCode;
 import com.ghunteranderson.tsugi.TsugiCompilerException;
 import com.ghunteranderson.tsugi.semantics.SymbolTable;
-import com.ghunteranderson.tsugi.semantics.SymbolTable.TypeSymbol;
-import com.ghunteranderson.tsugi.syntax.AstVisitor;
+import com.ghunteranderson.tsugi.syntax.AstCodeVisitor;
 import com.ghunteranderson.tsugi.syntax.FunctionDeclarationNode;
 import com.ghunteranderson.tsugi.syntax.FunctionExpressionNode;
 import com.ghunteranderson.tsugi.syntax.FunctionStatementNode;
@@ -23,22 +20,19 @@ import com.ghunteranderson.tsugi.syntax.LiteralNumberNode;
 import com.ghunteranderson.tsugi.syntax.LiteralStringNode;
 import com.ghunteranderson.tsugi.syntax.ModuleNode;
 import com.ghunteranderson.tsugi.syntax.OperationExpressionNode;
+import com.ghunteranderson.tsugi.syntax.StatementBlockNode;
 import com.ghunteranderson.tsugi.syntax.VariableAssignmentNode;
 import com.ghunteranderson.tsugi.syntax.VariableDeclarationNode;
 import com.ghunteranderson.tsugi.syntax.VariableExpressionNode;
 import com.ghunteranderson.tsugi.utils.LocalsTable;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 public class JvmCompiler {
 
   public JClassFile compile(ModuleNode module, SymbolTable symbolTable) {
     var classFile = buildEmptyClassFile(module, symbolTable);
-    var compiler = new JvmFunctionCompilerVisitor(symbolTable, classFile);
-
-
-    module.acceptVisitor(compiler);
+    module.getFunctions().forEach(f -> f.acceptCodeVisitor(new JvmFunctionCompilerVisitor(symbolTable, classFile)));
     return classFile;
   }
 
@@ -52,7 +46,7 @@ public class JvmCompiler {
   }
 
   @RequiredArgsConstructor
-  private static class JvmFunctionCompilerVisitor implements AstVisitor {
+  private static class JvmFunctionCompilerVisitor implements AstCodeVisitor {
 
     private final SymbolTable symbols;
     private final JClassFile classFile;
@@ -62,7 +56,7 @@ public class JvmCompiler {
     private JAttr_Code code;
 
     @Override
-    public void visit(FunctionDeclarationNode func) {
+    public void visitFunction(FunctionDeclarationNode func) {
       method = new JMethodInfo();
       classFile.methods.add(method);
       method.accessFlags = List.of(JAccessFlags.ACC_PUBLIC, JAccessFlags.ACC_STATIC);
@@ -77,13 +71,29 @@ public class JvmCompiler {
     }
 
     @Override
-    public void visit(VariableDeclarationNode node) {
+    public void visitBlock(StatementBlockNode block) {
+      locals.pushScope();
+    }
+
+    @Override
+    public void leaveBlock(StatementBlockNode block) {
+      locals.popScope();
+    }
+
+    @Override
+    public void leaveFunction(FunctionDeclarationNode func) {
+      code.maxLocals = locals.largestSizeObserved();
+      // TODO: set max stack size
+    }
+
+    @Override
+    public void visitStatement(VariableDeclarationNode node) {
       locals.add(node);
       code.maxLocals = Math.max(locals.size(), code.maxLocals);
     }
 
     @Override
-    public void visit(VariableAssignmentNode node) {
+    public void visitStatement(VariableAssignmentNode node) {
       int index = findVariableIndex(node.getName());
       if (index < 0)
         throw new TsugiCompilerException(ErrorCode.INVALID_SEMANTICS, node.getLocation(),
@@ -101,37 +111,37 @@ public class JvmCompiler {
     }
 
     @Override
-    public void visit(FunctionStatementNode node) {
+    public void visitStatement(FunctionStatementNode node) {
       // TODO Auto-generated method stub
-      var methodRef = TypeUtils.typeForMethod(node.)
+      //var methodRef = TypeUtils.typeForMethod(node.)
     }
 
     @Override
-    public void visit(VariableExpressionNode node) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'visit'");
-    }
-
-    @Override
-    public void visit(FunctionExpressionNode node) {
+    public void visitExpression(VariableExpressionNode node) {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 
     @Override
-    public void visit(LiteralNumberNode literalNumberNode) {
+    public void visitExpression(FunctionExpressionNode node) {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 
     @Override
-    public void visit(LiteralStringNode literalStringNode) {
+    public void visitExpression(LiteralNumberNode literalNumberNode) {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 
     @Override
-    public void visit(OperationExpressionNode operationExpressionNode) {
+    public void visitExpression(LiteralStringNode literalStringNode) {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public void visitExpression(OperationExpressionNode operationExpressionNode) {
       // TODO Auto-generated method stub
       throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
@@ -144,12 +154,6 @@ public class JvmCompiler {
         i = i + 1;
       }
       return -1;
-    }
-
-    @Override
-    public void visit(ModuleNode moduleNode) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }
 
   }

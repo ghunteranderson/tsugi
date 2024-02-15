@@ -91,14 +91,14 @@ public class SyntaxParser {
 
     var function = new FunctionDeclarationNode(parent, funcName.lexeme(), funcToken.location());
     function.setReturnType(returnType);
-    function.setStatements(body);
+    function.setBody(body);
     return function;
   }
 
-  private List<StatementNode> parseStatementBlock(){
-    in.next(Token.BRACE_L);
-
-    var statements = new LinkedList<StatementNode>();
+  private StatementBlockNode parseStatementBlock(){
+    var braceL = in.next(Token.BRACE_L);
+    var block = new StatementBlockNode(braceL.location());
+    var statements = block.getStatements();
 
     while(true){
       var token = in.peek();
@@ -109,7 +109,7 @@ public class SyntaxParser {
     }
 
     in.next(Token.BRACE_R);
-    return statements;
+    return block;
   }
 
   private List<StatementNode> parseStatement(){

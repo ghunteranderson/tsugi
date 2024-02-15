@@ -25,10 +25,10 @@ public class OperationExpressionNode extends ExpressionNode {
   }
 
   @Override
-  public void acceptVisitor(AstVisitor visitor) {
-    left.acceptVisitor(visitor);
-    right.acceptVisitor(visitor);
-    visitor.visit(this);
+  public void acceptCodeVisitor(AstCodeVisitor visitor) {
+    left.acceptCodeVisitor(visitor);
+    right.acceptCodeVisitor(visitor);
+    visitor.visitExpression(this);
   }
   
 }

@@ -17,9 +17,9 @@ public class VariableAssignmentNode extends StatementNode {
   }
 
   @Override
-  public void acceptVisitor(AstVisitor visitor) {
-    value.acceptVisitor(visitor);
-    visitor.visit(this);
+  public void acceptCodeVisitor(AstCodeVisitor visitor) {
+    value.acceptCodeVisitor(visitor);
+    visitor.visitStatement(this);
   }
 
 

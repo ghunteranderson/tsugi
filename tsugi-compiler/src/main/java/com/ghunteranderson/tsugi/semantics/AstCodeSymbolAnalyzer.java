@@ -7,7 +7,7 @@ import com.ghunteranderson.tsugi.ErrorCode;
 import com.ghunteranderson.tsugi.TsugiCompilerException;
 import com.ghunteranderson.tsugi.lexicon.SourceLocation;
 import com.ghunteranderson.tsugi.semantics.SymbolTable.TypeSymbol;
-import com.ghunteranderson.tsugi.syntax.AstVisitor;
+import com.ghunteranderson.tsugi.syntax.AstCodeVisitor;
 import com.ghunteranderson.tsugi.syntax.FunctionDeclarationNode;
 import com.ghunteranderson.tsugi.syntax.FunctionExpressionNode;
 import com.ghunteranderson.tsugi.syntax.FunctionStatementNode;
@@ -15,6 +15,7 @@ import com.ghunteranderson.tsugi.syntax.LiteralNumberNode;
 import com.ghunteranderson.tsugi.syntax.LiteralStringNode;
 import com.ghunteranderson.tsugi.syntax.ModuleNode;
 import com.ghunteranderson.tsugi.syntax.OperationExpressionNode;
+import com.ghunteranderson.tsugi.syntax.StatementBlockNode;
 import com.ghunteranderson.tsugi.syntax.VariableAssignmentNode;
 import com.ghunteranderson.tsugi.syntax.VariableDeclarationNode;
 import com.ghunteranderson.tsugi.syntax.VariableExpressionNode;
@@ -42,22 +43,32 @@ public class AstCodeSymbolAnalyzer {
   }
 
   @RequiredArgsConstructor
-  private static class AstCodeSymbolVisitor implements AstVisitor {
+  private static class AstCodeSymbolVisitor implements AstCodeVisitor {
     private final SymbolTable symbols;
     private LocalsTable<LocalVarMetadata> locals;
 
     @Override
-    public void visit(ModuleNode moduleNode) {
-    }
-
-    @Override
-    public void visit(FunctionDeclarationNode func) {
+    public void visitFunction(FunctionDeclarationNode func) {
       locals = new LocalsTable<>();
-      // TODO: Add parameters to locals table 
     }
 
     @Override
-    public void visit(VariableDeclarationNode stat) {
+    public void leaveFunction(FunctionDeclarationNode func) {
+    }
+
+    @Override
+    public void visitBlock(StatementBlockNode block) {
+      locals.pushScope();
+    }
+
+    @Override
+    public void leaveBlock(StatementBlockNode block) {
+      locals.popScope();
+    }
+
+
+    @Override
+    public void visitStatement(VariableDeclarationNode stat) {
       var localName = stat.getName();
       // TODO: As is, the declaration must use a fully qualified type
       var typeName = TypeUtils.qualifiedRefToString(stat.getType());
@@ -72,25 +83,25 @@ public class AstCodeSymbolAnalyzer {
     }
 
     @Override
-    public void visit(VariableAssignmentNode stat) {
+    public void visitStatement(VariableAssignmentNode stat) {
     }
 
     @Override
-    public void visit(FunctionStatementNode node) {
+    public void visitStatement(FunctionStatementNode node) {
       var name = node.getRef().getIdentifiers().get(0);
-      var qualifiedName = node.getParent().getSymbol().qualifiedName + "." + name;
-      symbols.getFunction(null, null)
+      //var qualifiedName = node.getParent().getSymbol().qualifiedName + "." + name;
+      //symbols.getFunction(null, null);
     }
 
     @Override
-    public void visit(VariableExpressionNode node) {
+    public void visitExpression(VariableExpressionNode node) {
       var varName = TypeUtils.qualifiedRefToString(node.name);
       var local = getLocal(locals, varName, node.getLocation());
       node.setTypeSymbol(local.type);
     }
 
     @Override
-    public void visit(FunctionExpressionNode node) {
+    public void visitExpression(FunctionExpressionNode node) {
       // TODO: Check the parameter types
       var argTypes = node.getArgs().stream().map(arg -> arg.getTypeSymbol()).collect(Collectors.toList());
       var funcName = TypeUtils.qualifiedRefToString(node.getRef());
@@ -106,7 +117,7 @@ public class AstCodeSymbolAnalyzer {
     }
 
     @Override
-    public void visit(LiteralNumberNode literalNumberNode) {
+    public void visitExpression(LiteralNumberNode literalNumberNode) {
       var stringValue = literalNumberNode.getValue();
       TypeSymbol typeSymbol;
       if(stringValue.indexOf('.') >= 0){
@@ -118,13 +129,13 @@ public class AstCodeSymbolAnalyzer {
     }
 
     @Override
-    public void visit(LiteralStringNode literalStringNode) {
+    public void visitExpression(LiteralStringNode literalStringNode) {
       var type = symbols.getType("string").get();
       literalStringNode.setTypeSymbol(type);
     }
 
     @Override
-    public void visit(OperationExpressionNode operationExpressionNode) {
+    public void visitExpression(OperationExpressionNode operationExpressionNode) {
       var leftType = operationExpressionNode.getLeft().getTypeSymbol();
       var rightType = operationExpressionNode.getRight().getTypeSymbol();
 
